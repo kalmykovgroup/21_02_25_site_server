@@ -10,6 +10,7 @@ using Infrastructure.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Api.Controllers
 {
@@ -37,16 +38,34 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ProductPagedResult>> GetAll(
+        public async Task<ActionResult<ProductPagedResponse>> GetAll(
             [FromQuery] string? search,
             [FromQuery] Guid? categoryId,
             [FromQuery] int page = 1)
         {
             if (page < 1) page = 1; // ✅ Гарантируем, что страница не отрицательная
+             
 
-            _logger.LogWarning($"Получение {page} страницы");
+            ProductPagedResponse result = await _mediator.Send(new GetFilteredProductsQuery(search, categoryId, page)); 
 
-            var result = await _mediator.Send(new GetFilteredProductsQuery(search, categoryId, page));
+            return Ok(result);
+        }
+
+        [HttpGet("main-page")]
+        public async Task<ActionResult<ProductPagedResponse>> MainPage([FromQuery] int page = 1)
+        {
+            ProductsMainPagedResponse result = await _mediator.Send(new GetProductsMainPagedQuery(page)); 
+
+            return Ok(result);
+        }
+        
+        [HttpGet("suggestions")]
+        public async Task<ActionResult<ProductPagedResponse>> Suggestions([FromQuery] string query){
+
+
+            GetProductNameSuggestionsResponse result = await _mediator.Send(new GetProductNameSuggestionsQuery(query));
+             
+
             return Ok(result);
         }
 

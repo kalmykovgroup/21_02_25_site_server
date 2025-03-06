@@ -1,4 +1,5 @@
-﻿using Application.Handlers.ProductSpace.ProductEntity.DTOs;
+﻿using Application.Common;
+using Application.Handlers.ProductSpace.ProductEntity.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Application.Handlers.ProductSpace.ProductEntity.Responses
     /// номер текущей страницы и эффективный размер страницы (количество элементов, 
     /// возвращаемых на данной странице).
     /// </summary>
-    public class ProductPagedResult
+    public class ProductPagedResponse : BaseResponse
     {
         /// <summary>
         /// Содержит коллекцию элементов для текущей страницы.
@@ -35,7 +36,7 @@ namespace Application.Handlers.ProductSpace.ProductEntity.Responses
         /// <param name="items">Коллекция элементов для текущей страницы.</param>
         /// <param name="hasMore">Есть ли еще записи.</param>
         /// <param name="page">Номер текущей страницы.</param> 
-        public ProductPagedResult(IEnumerable<ShortProductDto> items, bool hasMore, int page)
+        public ProductPagedResponse(IEnumerable<ShortProductDto> items, bool hasMore, int page)
         {
             Items = items;
             HasMore = hasMore;

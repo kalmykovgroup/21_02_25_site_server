@@ -129,6 +129,8 @@ namespace Domain.Entities.ProductSpace
         /// </summary>
         public virtual ICollection<ProductTag> ProductTags { get; set; } = new List<ProductTag>();
 
+        public virtual ICollection<RecommendedGroupProduct> RecommendedGroupProducts { get; set; } = new List<RecommendedGroupProduct>();
+
         /// <summary>
         /// Список файлов, связанных с продуктом.
         /// </summary>

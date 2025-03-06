@@ -9,6 +9,6 @@ using System.Threading.Tasks;
 
 namespace Application.Handlers.ProductSpace.ProductEntity.Queries
 {
-    public record GetFilteredProductsQuery(string? Search, Guid? CategoryId, int Page) : IRequest<ProductPagedResult>;
+    public record GetFilteredProductsQuery(string? Search, Guid? CategoryId, int Page) : IRequest<ProductPagedResponse>;
 
 }

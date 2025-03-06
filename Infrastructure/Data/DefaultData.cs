@@ -153,15 +153,11 @@ namespace Infrastructure.Data
             );
         
             // Основные категории
-            var smartphonesId = Guid.NewGuid();
+            var smartphonesId = Guid.Parse("12345678-abcd-1234-ef00-1234567890ab");
             var buttonPhonesId = Guid.NewGuid();
             var accessoriesId = Guid.NewGuid();
-
-            modelBuilder.Entity<Category>().HasData(
-              
-            );
-
-    
+            var raciiId = Guid.NewGuid();
+ 
             // Подкатегории аксессуаров
             var casesId = Guid.NewGuid();
             var screenProtectorsId = Guid.NewGuid();
@@ -169,43 +165,71 @@ namespace Infrastructure.Data
             var cablesId = Guid.NewGuid();
             var headphonesId = Guid.NewGuid();
 
-            modelBuilder.Entity<Category>().HasData(
-                  // Основная категория "Телефоны"
-                new Category { Id = rootCategoryId, Name = "Телефоны", ParentCategoryId = null, Level = 0, CreatedByUserId = adminId }, 
+            List<Guid> listCategoryGuid = new List<Guid>();
 
-                new Category { Id = smartphonesId, Name = "Смартфоны", ParentCategoryId = rootCategoryId, Level = 1, CreatedByUserId = adminId },
-                new Category { Id = buttonPhonesId, Name = "Кнопочные телефоны", ParentCategoryId = rootCategoryId, Level = 1, CreatedByUserId = adminId },
-                new Category { Id = accessoriesId, Name = "Аксессуары", ParentCategoryId = rootCategoryId, Level = 1, CreatedByUserId = adminId },
+            for (int i = 0; i < 19; i++)
+            {
+                listCategoryGuid.Add(Guid.NewGuid());
+            }
+
+            listCategoryGuid.Add(smartphonesId);
+            listCategoryGuid.Add(buttonPhonesId);
+            listCategoryGuid.Add(accessoriesId);
+            listCategoryGuid.Add(raciiId);
+
+            listCategoryGuid.Add(casesId);
+            listCategoryGuid.Add(screenProtectorsId);
+            listCategoryGuid.Add(chargersId);
+            listCategoryGuid.Add(cablesId);
+            listCategoryGuid.Add(headphonesId);
+
+            modelBuilder.Entity<Category>().HasData(
+                // Основная категория "Телефоны"
+                new Category { Id = rootCategoryId, Index = 0, Level = 0, Name = "Телефоны", Path = "phones", ParentCategoryId = null, CreatedByUserId = adminId },
+
+                new Category { Id = smartphonesId, Index = 0, Level = 1, Name = "Смартфоны", Path = "smartphones", ParentCategoryId = rootCategoryId, CreatedByUserId = adminId },
+                new Category { Id = buttonPhonesId, Index = 1, Level = 1, Name = "Кнопочные телефоны", Path = "button-phones", ParentCategoryId = rootCategoryId, CreatedByUserId = adminId },
+                new Category { Id = accessoriesId, Index = 2, Level = 1, Name = "Аксессуары", Path = "accessories", ParentCategoryId = rootCategoryId, CreatedByUserId = adminId },
+                new Category { Id = raciiId, Index = 3, Level = 1, Name = "Рации", Path = "walkie-talkies", ParentCategoryId = rootCategoryId, CreatedByUserId = adminId },
 
                 // Подкатегории смартфонов
-                new Category { Id = casesId, Name = "Флагманы", ParentCategoryId = smartphonesId, Level = 2, CreatedByUserId = adminId},
-                new Category { Id = screenProtectorsId, Name = "Средний сегмент", ParentCategoryId = smartphonesId, Level = 2, CreatedByUserId = adminId },
-                new Category { Id = chargersId, Name = "Бюджетные модели", ParentCategoryId = smartphonesId, Level = 2, CreatedByUserId = adminId },
-                new Category { Id = cablesId, Name = "Игровые смартфоны", ParentCategoryId = smartphonesId, Level = 2, CreatedByUserId = adminId },
-                new Category { Id = headphonesId, Name = "Компактные смартфоны", ParentCategoryId = smartphonesId, Level = 2, CreatedByUserId = adminId },
+                new Category { Id = listCategoryGuid[0], Index = 0, Level = 2, Name = "Флагманы", Path = "flagships", ParentCategoryId = smartphonesId, CreatedByUserId = adminId },
+                new Category { Id = listCategoryGuid[1], Index = 1, Level = 2, Name = "Средний сегмент", Path = "mid-range", ParentCategoryId = smartphonesId, CreatedByUserId = adminId },
+                new Category { Id = listCategoryGuid[2], Index = 2, Level = 2, Name = "Бюджетные модели", Path = "budget-models", ParentCategoryId = smartphonesId, CreatedByUserId = adminId },
+                new Category { Id = listCategoryGuid[3], Index = 3, Level = 2, Name = "Игровые смартфоны", Path = "gaming-smartphones", ParentCategoryId = smartphonesId, CreatedByUserId = adminId },
+                new Category { Id = listCategoryGuid[4], Index = 4, Level = 2, Name = "Компактные смартфоны", Path = "compact-smartphones", ParentCategoryId = smartphonesId, CreatedByUserId = adminId },
+                new Category { Id = listCategoryGuid[5], Index = 5, Level = 2, Name = "Топовые", Path = "top-models", ParentCategoryId = smartphonesId, CreatedByUserId = adminId },
+                new Category { Id = listCategoryGuid[6], Index = 6, Level = 2, Name = "Бизнес", Path = "business", ParentCategoryId = smartphonesId, CreatedByUserId = adminId },
 
-                 // Подкатегории кнопочных телефонов
-                 new Category { Id = Guid.NewGuid(), Name = "Классические", ParentCategoryId = buttonPhonesId, Level = 2, CreatedByUserId = adminId },
-                 new Category { Id = Guid.NewGuid(), Name = "Телефоны для пожилых", ParentCategoryId = buttonPhonesId, Level = 2, CreatedByUserId = adminId },
-                 new Category { Id = Guid.NewGuid(), Name = "Защищенные кнопочные телефоны", ParentCategoryId = buttonPhonesId, Level = 2, CreatedByUserId = adminId },
+                // Подкатегории кнопочных телефонов
+                new Category { Id = listCategoryGuid[7], Index = 0, Level = 2, Name = "Классические", Path = "classic", ParentCategoryId = buttonPhonesId, CreatedByUserId = adminId },
+                new Category { Id = listCategoryGuid[8], Index = 1, Level = 2, Name = "Телефоны для пожилых", Path = "phones-for-elderly", ParentCategoryId = buttonPhonesId, CreatedByUserId = adminId },
+                new Category { Id = listCategoryGuid[9], Index = 2, Level = 2, Name = "Защищенные кнопочные телефоны", Path = "rugged-button-phones", ParentCategoryId = buttonPhonesId, CreatedByUserId = adminId },
+
+                // Подкатегории аксессуаров
+                new Category { Id = casesId, Index = 0, Level = 2, Name = "Чехлы", Path = "cases", ParentCategoryId = accessoriesId, CreatedByUserId = adminId },
+                new Category { Id = screenProtectorsId, Index = 1, Level = 2, Name = "Защитные стекла и пленки", Path = "screen-protectors", ParentCategoryId = accessoriesId, CreatedByUserId = adminId },
+                new Category { Id = chargersId, Index = 2, Level = 2, Name = "Зарядные устройства", Path = "chargers", ParentCategoryId = accessoriesId, CreatedByUserId = adminId },
+                new Category { Id = cablesId, Index = 3, Level = 2, Name = "Кабели и адаптеры", Path = "cables-and-adapters", ParentCategoryId = accessoriesId, CreatedByUserId = adminId },
+                new Category { Id = headphonesId, Index = 4, Level = 2, Name = "Наушники и гарнитуры", Path = "headphones-and-headsets", ParentCategoryId = accessoriesId, CreatedByUserId = adminId },
 
                 // Подкатегории чехлов
-                new Category { Id = Guid.NewGuid(), Name = "Силиконовые", ParentCategoryId = casesId, Level = 3, CreatedByUserId = adminId },
-                new Category { Id = Guid.NewGuid(), Name = "Кожаные", ParentCategoryId = casesId, Level = 3, CreatedByUserId = adminId },
-                new Category { Id = Guid.NewGuid(), Name = "Противоударные", ParentCategoryId = casesId, Level = 3, CreatedByUserId = adminId },
-                new Category { Id = Guid.NewGuid(), Name = "Книжки", ParentCategoryId = casesId, Level = 3, CreatedByUserId = adminId },
-                new Category { Id = Guid.NewGuid(), Name = "С прозрачной крышкой", ParentCategoryId = casesId, Level = 3, CreatedByUserId = adminId },
+                new Category { Id = listCategoryGuid[10], Index = 0, Level = 3, Name = "Силиконовые", Path = "silicone", ParentCategoryId = casesId, CreatedByUserId = adminId },
+                new Category { Id = listCategoryGuid[11], Index = 1, Level = 3, Name = "Кожаные", Path = "leather", ParentCategoryId = casesId, CreatedByUserId = adminId },
+                new Category { Id = listCategoryGuid[12], Index = 2, Level = 3, Name = "Противоударные", Path = "shockproof", ParentCategoryId = casesId, CreatedByUserId = adminId },
+                new Category { Id = listCategoryGuid[13], Index = 3, Level = 3, Name = "Книжки", Path = "book-style", ParentCategoryId = casesId, CreatedByUserId = adminId },
+                new Category { Id = listCategoryGuid[14], Index = 4, Level = 3, Name = "С прозрачной крышкой", Path = "with-transparent-cover", ParentCategoryId = casesId, CreatedByUserId = adminId },
 
                 // Подкатегории зарядных устройств
-                new Category { Id = Guid.NewGuid(), Name = "Беспроводные", ParentCategoryId = chargersId, Level = 3, CreatedByUserId = adminId },
-                new Category { Id = Guid.NewGuid(), Name = "Сетевые", ParentCategoryId = chargersId, Level = 3, CreatedByUserId = adminId },
-                new Category { Id = Guid.NewGuid(), Name = "Автомобильные", ParentCategoryId = chargersId, Level = 3, CreatedByUserId = adminId },
-                new Category { Id = Guid.NewGuid(), Name = "Магнитные", ParentCategoryId = chargersId, Level = 3, CreatedByUserId = adminId }
+                new Category { Id = listCategoryGuid[15], Index = 0, Level = 3, Name = "Беспроводные", Path = "wireless", ParentCategoryId = chargersId, CreatedByUserId = adminId },
+                new Category { Id = listCategoryGuid[16], Index = 1, Level = 3, Name = "Сетевые", Path = "network", ParentCategoryId = chargersId, CreatedByUserId = adminId },
+                new Category { Id = listCategoryGuid[17], Index = 2, Level = 3, Name = "Автомобильные", Path = "car", ParentCategoryId = chargersId, CreatedByUserId = adminId },
+                new Category { Id = listCategoryGuid[18], Index = 3, Level = 3, Name = "Магнитные", Path = "magnetic", ParentCategoryId = chargersId, CreatedByUserId = adminId }
             );
-             
- 
 
-             
+
+
+
             var brand1Id = Guid.NewGuid();
             var brand2Id = Guid.NewGuid();
             var brand3Id = Guid.NewGuid();
@@ -230,6 +254,54 @@ namespace Infrastructure.Data
             var wishListsList = new List<WishList>();
             var wishListProductsList = new List<WishListProduct>();
 
+             
+
+            List<Guid> RecommendedGroupGuids = new List<Guid>();
+
+            RecommendedGroupGuids.Add(Guid.NewGuid());
+            RecommendedGroupGuids.Add(Guid.NewGuid());
+            RecommendedGroupGuids.Add(Guid.NewGuid());
+            RecommendedGroupGuids.Add(Guid.NewGuid());
+            RecommendedGroupGuids.Add(Guid.NewGuid());
+
+            // 🔹 Seed Data (5 групп)
+            var recommendedGroups = new List<RecommendedGroup>
+            {
+                new RecommendedGroup { Id = RecommendedGroupGuids[0], Title = "Популярные товары", Background = "#dfcfd2", Color = "#3a3b36", CreatedByUserId = adminId},
+                new RecommendedGroup { Id = RecommendedGroupGuids[1], Title = "Горячие скидки", Background = "#ddd2c8", Color = "#3a3b36",  CreatedByUserId = adminId },
+                new RecommendedGroup { Id = RecommendedGroupGuids[2], Title = "Лучшая электроника" , Background = "#d7defc", Color = "#3a3b36",  CreatedByUserId = adminId},
+                new RecommendedGroup { Id = RecommendedGroupGuids[3], Title = "Игровая зона" , Background = "#f8d1de", Color = "#3a3b36",  CreatedByUserId = adminId},
+                new RecommendedGroup { Id = RecommendedGroupGuids[4], Title = "Спорт и активный отдых", Background = "#e6daba", Color = "#3a3b36",  CreatedByUserId = adminId }
+            };
+
+            modelBuilder.Entity<RecommendedGroup>().HasData(recommendedGroups);
+
+
+            string[] productNames = new string[]
+                    {
+                        "Ультрасовременный Смартфон с Тройной Камерой и OLED Дисплеем",
+                        "Многофункциональная Кофемашина с Автоматическим Приготовлением",
+                        "Игровая Механическая Клавиатура с RGB Подсветкой и Макросами",
+                        "Профессиональный Фотокамера с 4K Записью и Оптической Стабилизацией",
+                        "Сверхмощный Игровой Ноутбук с Видеокартой Последнего Поколения",
+                        "Инновационные Беспроводные Наушники с Активным Шумоподавлением",
+                        "Робот-Пылесос с Лазерной Навигацией и Управлением через Приложение",
+                        "Электрический Самокат с Длинным Запасом Хода и Амортизацией",
+                        "Автоматическая Сушильная Машина с Технологией Энергосбережения",
+                        "Смарт-Телевизор с 4K UHD Экраном и Встроенным Голосовым Ассистентом",
+                        "Профессиональный 3D Принтер с Высокой Точностью Печати",
+                        "Эргономичное Компьютерное Кресло с Регулируемой Поддержкой Спины",
+                        "Премиальный Электрический Гриль с Антипригарным Покрытием",
+                        "Многофункциональный Умный Чайник с Регулируемым Нагревом",
+                        "Высокотехнологичная Видеокарта с Охлаждением и Подсветкой",
+                        "Геймерский Монитор с 240Hz Частотой Обновления и HDR Поддержкой",
+                        "Компактный Дрон с Камерой 4K и Автономным Полетом",
+                        "Электронная Книга с E-Ink Экраном и Регулируемой Подсветкой",
+                        "Портативная Колонка с Мощным Басом и Влагозащитой",
+                        "Смарт-Часы с GPS Трекером и Мониторингом Сердечного Ритма"
+                    };
+
+            List<Guid> guidsProduct = new List<Guid>();
 
             Random random = new Random();
 
@@ -237,6 +309,11 @@ namespace Infrastructure.Data
             {
                 Guid productId = Guid.NewGuid();
                 Guid productWishListId = Guid.NewGuid();
+
+                if(guidsProduct.Count() < recommendedGroups.Count * 4)
+                {
+                    guidsProduct.Add(productId);
+                }
 
                 decimal number = 10 + random.Next(0, 200000); // Исходное число
                 decimal minPercent = 10m; // Минимальный процент
@@ -250,25 +327,36 @@ namespace Infrastructure.Data
                 var product = new Product
                 {
                     Id = productId,
-                    CategoryId = (i % 2 == 0) ? smartphonesId : buttonPhonesId,
+                    CategoryId = listCategoryGuid[random.Next(0, listCategoryGuid.Count - 1)],
                     BrandId = (i % 5 == 0) ? brand5Id : (i % 4 == 0) ? brand4Id : (i % 3 == 0) ? brand3Id : (i % 2 == 0) ? brand2Id : brand1Id,
                     Price = 1000 + i,
-                    Name = $"Product {i}",
+                    Name = i < productNames.Length ? productNames[i] : $"Product {i}",
                     Url = "",
                     OriginalPrice = newNumber,
                     CreatedByUserId = adminId,
                     SupplierId = (i % 3 == 0) ? supplier3Id : (i % 2 == 0) ? supplier2Id : supplier1Id
                 };
                 productsList.Add(product);
-
-               
-
-                
-
-                
+                     
             }
 
             modelBuilder.Entity<Product>().HasData(productsList);  
+
+            List<RecommendedGroupProduct> RecommendedGroupProducts = new List<RecommendedGroupProduct >();
+
+
+            for (int i = 0; i < recommendedGroups.Count; i++)//1,2,3,4,5
+            {
+                for(int j = 0; j < 4; j++)//1,2,3,4
+                {
+                    RecommendedGroupProducts.Add(new RecommendedGroupProduct() {
+                        ProductId = guidsProduct[(i + 1 * j + 1) - 1],
+                        RecommendedGroupId = recommendedGroups[i].Id,
+                    });
+                }
+            }
+
+            modelBuilder.Entity<RecommendedGroupProduct>().HasData(RecommendedGroupProducts);
 
             // Скидки и связи скидок, если необходимо – можно добавить аналогично
         }

@@ -23,7 +23,8 @@ namespace Infrastructure.Repositories.CategorySpace
             return await _dbContext.Categories
                 .Where(c => !c.IsDeleted && c.Level == 0)
                 .Include(c => c.SubCategories) // Подтягиваем подкатегории
-                    .ToListAsync(cancellationToken);
+                .OrderBy(c => c.Index) // Сортировка по полю Index  
+                .ToListAsync(cancellationToken);
         }
          
     }

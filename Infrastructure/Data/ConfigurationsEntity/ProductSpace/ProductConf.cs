@@ -15,9 +15,12 @@ namespace Infrastructure.Data.ConfigurationsEntity.ProductSpace
             builder.ToTable("products");
                 builder.HasKey(x => x.Id);
 
-                builder.Property(p => p.Id).HasColumnName("Id").IsRequired();
+                builder.Property(p => p.Id).HasColumnName("id").IsRequired();
                 builder.Property(p => p.CategoryId).HasColumnName("category_id").IsRequired();
                 builder.Property(p => p.SupplierId).HasColumnName("supplier_id").IsRequired();
+
+                builder.Property(p => p.Name).HasColumnName("name").IsRequired();
+                builder.Property(p => p.Description).HasColumnName("description").HasMaxLength(1000).IsRequired(false);
 
             builder.Property(e => e.Url)
                 .HasColumnName("url")         // Название колонки в БД

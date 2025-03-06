@@ -17,9 +17,15 @@ namespace Application.Handlers.ProductSpace.ProductEntity.Mapping
             CreateMap<Product, LongProductDto>();
             CreateMap<Product, ShortProductDto>();
             CreateMap<Product, WishListItemDto>();
-             
-             
-             
+
+            
+
+            CreateMap<RecommendedGroup, RecommendedGroupDto>()
+            .ForMember(dest => dest.Products, opt => opt.MapFrom((src, dest, destMember, context) =>
+                src.RecommendedGroupProducts.Select(rgp =>
+                    context.Mapper.Map<ShortProductDto>(rgp.Product) // ✅ Автоматически маппит `Product → ShortProductDto`
+                )
+            ));
 
 
         }

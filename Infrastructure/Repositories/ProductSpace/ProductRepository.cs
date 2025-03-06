@@ -15,8 +15,11 @@ namespace Infrastructure.Repositories.ProductSpace
 {
     public class ProductRepository : BaseRepository, IProductRepository
     {
+        private readonly ILogger<BaseRepository> _logger;
+
         public ProductRepository(AppDbContext dbContext, ILogger<BaseRepository> logger) : base(dbContext, logger)
         {
+            _logger = logger;
         }
 
         public async Task<int> UpdateAsync(Product product, CancellationToken cancellationToken = default)
@@ -37,13 +40,14 @@ namespace Infrastructure.Repositories.ProductSpace
 
 
         public async Task<(IEnumerable<Product> Products, bool HasMore)> GetAllProductsAsync(
-        string? search,
-        Guid? categoryId,
-        int page,
+            string? search,
+            Guid? categoryId,
+            int page,
+            int firstPageSize,
+            int nextPageSize,
         CancellationToken cancellationToken = default)
-        {
-            int firstPageSize = 30; // Количество товаров на первой странице
-            int nextPageSize = 20;  // Количество товаров на остальных страницах
+        {  
+
             int pageSize = page == 1 ? firstPageSize : nextPageSize; // Определяем, какая страница
 
             // 1️⃣ Получаем список категорий (включая дочерние)
@@ -74,22 +78,74 @@ namespace Infrastructure.Repositories.ProductSpace
                 query = query.Where(p => p.Name.ToLower().Contains(lowerSearch));
             }
 
-            // 5️⃣ Сортировка (по названию)
-            query = query.OrderBy(p => p.Name);
+            // 5️⃣ Сортировка (по дате добавления)
+            query = query.OrderBy(p => p.CreatedAt);
+
+            // 6️⃣ Пагинация
+            int offset = (page - 1) * nextPageSize + (page == 1 ? 0 : firstPageSize - nextPageSize);
+
 
             // 6️⃣ Пагинация
             List<Product> products = await query
-                .Skip((page - 1) * nextPageSize + (page == 1 ? 0 : firstPageSize - nextPageSize))
+                .Skip(offset)
                 .Take(pageSize)
                 .ToListAsync(cancellationToken);
 
             // 7️⃣ Определяем, есть ли ещё данные
             bool hasMore = await query
-                .Skip((page - 1) * nextPageSize + (page == 1 ? 0 : firstPageSize - nextPageSize) + pageSize)
+                .Skip(offset + pageSize)
                 .AnyAsync(cancellationToken);
 
             return (products, hasMore);
         }
+
+
+        public async Task<List<string>> GetProductNameSuggestionsAsync(string input, int limit = 10)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return new List<string>();
+
+            // Формируем шаблон для ILIKE (регистронезависимый поиск)
+            var pattern = "%" + input.Trim() + "%";
+
+            // SQL-запрос для PostgreSQL (используем двойные кавычки для имен)
+            var sqlQuery = $@"
+        SELECT ""name""
+        FROM ""products""
+        WHERE ""is_active"" = true AND ""name"" ILIKE @pattern
+        ORDER BY ""name""
+        LIMIT {limit};";
+
+            var suggestions = new List<string>();
+
+            // Получаем соединение из контекста EF Core
+            using (var connection = _dbContext.Database.GetDbConnection())
+            {
+                await connection.OpenAsync();
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = sqlQuery;
+
+                    // Параметризация запроса для защиты от SQL-инъекций
+                    var parameter = command.CreateParameter();
+                    parameter.ParameterName = "@pattern";
+                    parameter.Value = pattern;
+                    command.Parameters.Add(parameter);
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            suggestions.Add(reader.GetString(0));
+                        }
+                    }
+                }
+            }
+
+            return suggestions;
+        }
+
 
 
 
@@ -107,7 +163,6 @@ namespace Infrastructure.Repositories.ProductSpace
 
             return product; // ✅ Возвращаем добавленный продукт
         }
-
  
     }
 }

@@ -20,8 +20,12 @@ namespace Domain.Interfaces.Repositories.ProductSpace
            string? search,
            Guid? categoryId,
            int page,
+           int firstPageSize,
+           int nextPageSize,
            CancellationToken cancellationToken = default);
-
+         
+        
+        Task<List<string>> GetProductNameSuggestionsAsync(string input, int limit = 10); 
 
     }
 }

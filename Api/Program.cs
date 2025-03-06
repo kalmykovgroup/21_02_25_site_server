@@ -48,6 +48,8 @@ namespace Api
             builder.Services.AddScoped<IPhoneVerificationCodeRepository, PhoneVerificationCodeRepository>();
 
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IRecommendedGroupRepository, RecommendedGroupRepository>();
+
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 
@@ -163,7 +165,7 @@ namespace Api
                 var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
                 // Удаляем базу данных, если она существует
-               // context.Database.EnsureDeleted();
+              context.Database.EnsureDeleted();
 
                 // Создаём базу данных заново
                 context.Database.EnsureCreated();

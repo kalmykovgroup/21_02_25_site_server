@@ -22,11 +22,14 @@ namespace Infrastructure.Data.ConfigurationsEntity.CategorySpace
 
             entity.Property(c => c.IsActive).HasColumnName("is_active").HasDefaultValue(true);
 
-            entity.Property(c => c.ImageUrl).HasColumnName("image_url").HasMaxLength(2048);
+            entity.Property(c => c.Icon).HasColumnName("icon").HasMaxLength(2048);
 
             entity.Property(c => c.Level).HasColumnName("level").IsRequired();
+            entity.Property(c => c.Index).HasColumnName("index").IsRequired();
 
             entity.Property(c => c.FullPath).HasColumnName("full_path").HasMaxLength(1000);
+
+            entity.Property(c => c.Path).HasColumnName("path").HasMaxLength(100);
 
             // Настройка связи с родительской категорией
             entity.HasOne(e => e.ParentCategory)

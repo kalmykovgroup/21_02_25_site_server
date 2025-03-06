@@ -29,7 +29,7 @@ namespace Domain.Entities.CategorySpace
         /// <summary>
         /// URL изображения категории
         /// </summary> 
-        public string? ImageUrl { get; set; }
+        public string? Icon { get; set; }
 
  
         /// <summary>
@@ -49,9 +49,17 @@ namespace Domain.Entities.CategorySpace
         public int Level { get; set; }
 
         /// <summary>
+        /// При выводе, нужно понимать кто будет в каком порядке
+        /// </summary> 
+        public int Index { get; set; }
+
+        /// <summary>
         /// Полный путь категории в иерархии
         /// </summary> 
         public string? FullPath { get; set; }
+         
+
+        public string? Path { get; set; }
          
 
         /// <summary>

@@ -12,13 +12,17 @@ namespace Application.Handlers.CategorySpace.CategoryEntity.DTOs
 
         public Guid? ParentCategoryId { get; set; }
 
-        public string? ImageUrl { get; set; }
+        public string? Icon { get; set; }
 
         public string Name { get; set; } = string.Empty;
 
         public string? Description { get; set; }
 
+        public string? Path { get; set; } 
+
         public int Level { get; set; }
+
+        public int Index { get; set; }
 
         public string? FullPath { get; set; }
 
