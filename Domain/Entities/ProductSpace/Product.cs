@@ -4,7 +4,7 @@ using Domain.Entities.Common;
 using Domain.Entities.CategorySpace;
 using Domain.Entities.InventorySpace;
 using Domain.Entities.IntermediateSpace;
-using Domain.Entities._Storage;
+using Domain.Entities.StorageSpace;
 using Domain.Entities.AnalyticsSpace; 
 using Domain.Entities.BrandSpace;
 using Domain.Models.LoyaltyProgramSpace.Bundle;
@@ -43,33 +43,10 @@ namespace Domain.Entities.ProductSpace
         /// Ссылка на поставщика.
         /// </summary>
        public virtual Supplier Supplier { get; set; } = null!;
-
-        /// <summary>
-        /// Цена продукта со скидкой
-        /// Вычисляется, если была создана скидка.
-        /// </summary>  
-        public decimal Price { get; set; }
-
-        /// <summary>
-        /// Рейтинг
-        /// Когда пользователь оставит отзыв о товаре, то у товара пересчетается рейтинг 
-        /// </summary>  
-        public decimal Rating { get; set; }
-
+        
         public int NumberOfReviews { get; set; }
-
-
-        /// <summary> 
-        /// Процент скидки, вычисляется, если была создана скидка.
-        /// </summary> 
-        public decimal? DiscountPercentage { get; set; }
-
-        /// <summary>
-        /// Цена без скидок
-        /// </summary> 
-        public decimal? OriginalPrice { get; set; }
-         
-
+ 
+        
         /// <summary>
         /// Признак активности продукта (отображается ли он на сайте).
         /// </summary> 
@@ -85,12 +62,7 @@ namespace Domain.Entities.ProductSpace
         /// </summary>
         public virtual Brand Brand { get; set; } = null!;
 
-
-        /// <summary>
-        /// Ссылка на картинку
-        /// </summary>  
-        public string Url {  get; set; } = string.Empty;
-
+  
         /// <summary>
         /// Название продукта.
         /// </summary>  
@@ -101,22 +73,20 @@ namespace Domain.Entities.ProductSpace
         /// </summary> 
         public string? Description { get; set; } = null;
 
+ 
 
-        /// <summary>
-        /// Список характеристик продукта.
-        /// </summary>
-        public virtual ICollection<ProductAttribute> Attributes { get; set; } = new List<ProductAttribute>();
+       public virtual ICollection<SellerOffer> Offers { get; set; } = new List<SellerOffer>();
 
-
-        public virtual ICollection<ProductVariant> ProductVariants { get; set; } = new List<ProductVariant>();
+ 
 
         /// <summary>
         /// Доступное количество продукта на складе.
         /// </summary>
         public virtual ICollection<ProductStock> ProductStocks { get; set; } = new List<ProductStock>();
+        
+        public virtual ICollection<ProductVariant> ProductVariants { get; set; } = new List<ProductVariant>();
 
-
-
+        
         /// <summary>
         /// Сущность, представляющая отзыв о продукте.
         /// Хранит информацию о рейтинге, комментарии, клиентах,
@@ -131,11 +101,7 @@ namespace Domain.Entities.ProductSpace
 
         public virtual ICollection<RecommendedGroupProduct> RecommendedGroupProducts { get; set; } = new List<RecommendedGroupProduct>();
 
-        /// <summary>
-        /// Список файлов, связанных с продуктом.
-        /// </summary>
-        public virtual ICollection<ProductFile> ProductFiles { get; set; } = new List<ProductFile>();
-
+    
         public virtual ICollection<WishListProduct> WishListProducts { get; set; } = new List<WishListProduct>();
 
 
@@ -156,5 +122,5 @@ namespace Domain.Entities.ProductSpace
 
 
     }
-
+ 
 }

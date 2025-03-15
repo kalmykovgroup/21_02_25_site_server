@@ -2,24 +2,19 @@
 using Domain.Interfaces.Repositories.ProductSpace;
 using Infrastructure.Data; 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging; 
+using Application.Common.Interfaces; 
 
 namespace Infrastructure.Repositories.ProductSpace
 {
     public class ProductRepository : BaseRepository, IProductRepository
     {
         private readonly ILogger<BaseRepository> _logger;
-
-        public ProductRepository(AppDbContext dbContext, ILogger<BaseRepository> logger) : base(dbContext, logger)
+        private readonly ICategoryCacheService _categoryCacheService;
+        public ProductRepository(AppDbContext dbContext, ICategoryCacheService categoryCacheService, ILogger<BaseRepository> logger) : base(dbContext, logger)
         {
             _logger = logger;
+            _categoryCacheService = categoryCacheService;
         }
 
         public async Task<int> UpdateAsync(Product product, CancellationToken cancellationToken = default)
@@ -37,8 +32,7 @@ namespace Infrastructure.Repositories.ProductSpace
             return await _dbContext.SaveChangesAsync(cancellationToken); 
         }
 
-
-
+       
         public async Task<(IEnumerable<Product> Products, bool HasMore)> GetAllProductsAsync(
             string? search,
             Guid? categoryId,
@@ -47,18 +41,16 @@ namespace Infrastructure.Repositories.ProductSpace
             int nextPageSize,
         CancellationToken cancellationToken = default)
         {  
-
+            
             int pageSize = page == 1 ? firstPageSize : nextPageSize; // Определяем, какая страница
 
             // 1️⃣ Получаем список категорий (включая дочерние)
-            List<Guid> categoryIds = new();
+            List<Guid>? categoryIds = null;
             if (categoryId.HasValue)
             {
-                categoryIds = await _dbContext.Categories
-                    .Where(c => c.Id == categoryId.Value || c.ParentCategoryId == categoryId.Value)
-                    .Select(c => c.Id)
-                    .ToListAsync(cancellationToken);
+                categoryIds = await _categoryCacheService.GetCategoryIdsAndSubcategoriesAsync(categoryId.Value);
             }
+             
 
             // 2️⃣ Базовый запрос к БД
             IQueryable<Product> query = _dbContext.Products
@@ -66,7 +58,7 @@ namespace Infrastructure.Repositories.ProductSpace
                 .AsQueryable();
 
             // 3️⃣ Фильтр по категории (если указана)
-            if (categoryIds.Any())
+            if (categoryIds != null)
             {
                 query = query.Where(p => categoryIds.Contains(p.CategoryId));
             }
@@ -98,7 +90,8 @@ namespace Infrastructure.Repositories.ProductSpace
 
             return (products, hasMore);
         }
-
+        
+   
 
         public async Task<List<string>> GetProductNameSuggestionsAsync(string input, int limit = 10)
         {

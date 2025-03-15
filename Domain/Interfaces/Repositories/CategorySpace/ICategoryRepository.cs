@@ -12,5 +12,6 @@ namespace Domain.Interfaces.Repositories.CategorySpace
     public interface ICategoryRepository : IBaseRepository
     {
         Task<IEnumerable<Category>> GetParentCategoriesAsync(CancellationToken cancellationToken = default);
+        Task<List<Guid>> GetCategoryIdsAndSubcategoriesAsync(Guid categoryId, CancellationToken cancellationToken = default);
     }
 }

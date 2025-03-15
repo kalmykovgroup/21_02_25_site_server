@@ -8,11 +8,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain.Entities.Common;
 using Domain.Entities.IntermediateSpace;
-using Domain.Entities._Storage;
+using Domain.Entities.StorageSpace;
 using Domain.Models.LoyaltyProgramSpace.Discount;
 using Domain.Entities.UserSpace.UserTypes;
 using Domain.Entities.StatusesSpace.Heirs;
 using Domain.Entities.PaymentSpace;
+using Domain.Entities.StorageSpace.Heirs;
 
 namespace Domain.Entities.OrderSpace
 { 

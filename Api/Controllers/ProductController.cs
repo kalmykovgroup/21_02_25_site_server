@@ -38,18 +38,21 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ProductPagedResponse>> GetAll(
+        public async Task<ActionResult<ProductPagedResponse>> GetFilterProducts(
             [FromQuery] string? search,
             [FromQuery] Guid? categoryId,
             [FromQuery] int page = 1)
         {
             if (page < 1) page = 1; // ✅ Гарантируем, что страница не отрицательная
              
+            _logger.LogWarning("Запрос: search: {search} | categoryId: {categoryId} | page: {page}", search, categoryId, page);
 
             ProductPagedResponse result = await _mediator.Send(new GetFilteredProductsQuery(search, categoryId, page)); 
 
             return Ok(result);
         }
+        
+      
 
         [HttpGet("main-page")]
         public async Task<ActionResult<ProductPagedResponse>> MainPage([FromQuery] int page = 1)

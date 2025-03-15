@@ -26,8 +26,7 @@ namespace Infrastructure.Data.ConfigurationsEntity.CategorySpace
 
             entity.Property(c => c.Level).HasColumnName("level").IsRequired();
             entity.Property(c => c.Index).HasColumnName("index").IsRequired();
-
-            entity.Property(c => c.FullPath).HasColumnName("full_path").HasMaxLength(1000);
+ 
 
             entity.Property(c => c.Path).HasColumnName("path").HasMaxLength(100);
 
@@ -37,8 +36,7 @@ namespace Infrastructure.Data.ConfigurationsEntity.CategorySpace
                 .HasForeignKey(e => e.ParentCategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
                   
-                 
-            entity.HasIndex(e => e.FullPath).HasDatabaseName("IX_Category_FullPath");
+                  
 
            
         }   

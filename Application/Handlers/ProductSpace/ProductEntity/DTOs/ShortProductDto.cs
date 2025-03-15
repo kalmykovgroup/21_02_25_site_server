@@ -8,8 +8,7 @@ namespace Application.Handlers.ProductSpace.ProductEntity.DTOs
 {
     public class ShortProductDto
     {
-        public Guid Id { get; set; }
-        public string Url { get; set; } = string.Empty;
+        public Guid Id { get; set; } 
         public string Name { get; set; } = string.Empty;
         public decimal? OriginalPrice { get; set; }
         public decimal Price { get; set; }
@@ -19,6 +18,7 @@ namespace Application.Handlers.ProductSpace.ProductEntity.DTOs
 
         public bool IsDiscount => OriginalPrice != null && DiscountPercentage != null;
 
+        public List<OfferImageDto> Images { get; set; } = new();
 
     }
 }

@@ -1,7 +1,8 @@
 ﻿using Domain.Entities.Common;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using Domain.Entities._Storage;
+using Domain.Entities.StorageSpace;
+using Domain.Entities.StorageSpace.Heirs;
 using Domain.Entities.UserSpace.UserTypes;
 
 namespace Domain.Entities.ProductSpace
@@ -16,7 +17,8 @@ namespace Domain.Entities.ProductSpace
         public Guid Id { get; set; }
 
         /// <summary>
-        /// Уникальный идентификатор продукта, на который оставлен отзыв.
+        /// Уникальный
+        /// идентификатор продукта, на который оставлен отзыв.
         /// </summary> 
         public Guid ProductId { get; set; }
 
@@ -49,6 +51,7 @@ namespace Domain.Entities.ProductSpace
         /// <summary>
         /// Файлы, прикреплённые к отзыву.
         /// Например, фотографии продукта.
+        ///
         /// </summary>
         public virtual ICollection<ReviewFile> ReviewFiles { get; set; } = new List<ReviewFile>();
 

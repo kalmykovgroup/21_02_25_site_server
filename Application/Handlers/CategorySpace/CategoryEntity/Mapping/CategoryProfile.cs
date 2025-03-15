@@ -14,6 +14,7 @@ namespace Application.Handlers.CategorySpace.CategoryEntity.Mapping
         public CategoryProfile() {
 
             CreateMap<Category, CategoryDto>();
+            CreateMap<Category, Category>();
         }
     }
 }

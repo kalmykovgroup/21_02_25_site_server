@@ -2,7 +2,7 @@
 using Domain.Entities.OrderSpace; 
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Domain.Entities._Storage
+namespace Domain.Entities.StorageSpace.Heirs
 {
     /// <summary>
     /// Сущность, представляющая файл, связанный с заказом.

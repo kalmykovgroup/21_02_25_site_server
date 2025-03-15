@@ -2,15 +2,14 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace Domain.Entities._Storage
+namespace Domain.Entities.StorageSpace
 {
     /// <summary>
     /// Категория файла для определения типа сущности в TPH.
     /// </summary>
     public enum FileCategory
     {
-        GeneralFile,   // Общий тип файлов (например, если нет явного типа)
-        ProductFile,   // Файлы, связанные с продуктами
+        GeneralFile,   // Общий тип файлов (например, если нет явного типа) 
         OrderFile,     // Файлы, связанные с заказами
         ReviewFile     // Файлы, связанные с отзывами
     }

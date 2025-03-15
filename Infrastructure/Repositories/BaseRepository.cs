@@ -13,7 +13,7 @@ namespace Infrastructure.Repositories
     public class BaseRepository : IBaseRepository
     {
         protected readonly AppDbContext _dbContext; 
-        ILogger<BaseRepository> _logger;
+        protected ILogger<BaseRepository> _logger;
 
         public BaseRepository(AppDbContext dbContext, ILogger<BaseRepository> logger)
         {

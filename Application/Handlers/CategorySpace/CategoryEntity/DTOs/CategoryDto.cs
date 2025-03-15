@@ -24,8 +24,6 @@ namespace Application.Handlers.CategorySpace.CategoryEntity.DTOs
 
         public int Index { get; set; }
 
-        public string? FullPath { get; set; }
-
         public List<CategoryDto> SubCategories { get; set; } = new List<CategoryDto>();
     }
 }

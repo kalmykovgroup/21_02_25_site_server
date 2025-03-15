@@ -1,5 +1,6 @@
 ﻿ 
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Domain.Entities.Common;
 using Domain.Entities.IntermediateSpace;
 using Domain.Entities.ProductSpace; 
@@ -17,9 +18,8 @@ namespace Domain.Entities.CategorySpace
         /// Идентификатор родительской категории (для иерархии)
         /// </summary> 
         public Guid? ParentCategoryId { get; set; }
-
-
-        public virtual Category? ParentCategory { get; set; } = null!;
+        
+        public virtual Category? ParentCategory { get; set; } = null;
 
         /// <summary>
         /// Признак активности категории
@@ -40,25 +40,19 @@ namespace Domain.Entities.CategorySpace
         /// <summary>
         /// Описание продукта.
         /// </summary> 
-        public string? Description {  get; set; } = String.Empty;
+        public string? Description {  get; set; } = null;
  
 
         /// <summary>
         /// Уровень вложенности категории
-        /// </summary> 
+        /// </summary>  
         public int Level { get; set; }
 
         /// <summary>
         /// При выводе, нужно понимать кто будет в каком порядке
         /// </summary> 
         public int Index { get; set; }
-
-        /// <summary>
-        /// Полный путь категории в иерархии
-        /// </summary> 
-        public string? FullPath { get; set; }
-         
-
+        
         public string? Path { get; set; }
          
 
@@ -66,10 +60,13 @@ namespace Domain.Entities.CategorySpace
         /// Предпочтения пользователей, связанные с категорией
         /// </summary>
         public virtual ICollection<CustomerPreferenceCategory> CustomerPreferenceCategories { get; set; } = new List<CustomerPreferenceCategory>();
+      
+        public virtual ICollection<CategoryAttribute> CategoryAttributes { get; set; } = new List<CategoryAttribute>();
 
+        
         /// <summary>
         /// Дочерние подкатегории
-        /// </summary>
+        /// </summary> 
         public virtual ICollection<Category> SubCategories { get; set; } = new List<Category>();
 
         /// <summary>

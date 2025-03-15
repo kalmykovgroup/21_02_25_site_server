@@ -21,21 +21,16 @@ namespace Infrastructure.Data.ConfigurationsEntity.ProductSpace
 
                 builder.Property(p => p.Name).HasColumnName("name").IsRequired();
                 builder.Property(p => p.Description).HasColumnName("description").HasMaxLength(1000).IsRequired(false);
+ 
 
-            builder.Property(e => e.Url)
-                .HasColumnName("url")         // Название колонки в БД
-                .HasColumnType("varchar(2048)") // Тип данных в БД (PostgreSQL / MySQL)
-                .HasMaxLength(2048)           // Максимальная длина строки
-                .IsRequired();                // Обязательное поле
-
-
-            builder.Property(p => p.OriginalPrice).HasColumnName("original_price").IsRequired(false).HasPrecision(18, 2);
+                /*builder.Property(p => p.OriginalPrice).HasColumnName("original_price").IsRequired(false).HasPrecision(18, 2);
 
                 builder.Property(p => p.DiscountPercentage).HasColumnName("discount_percentage").IsRequired(false).HasPrecision(5, 2);
 
                 builder.Property(p => p.Price).HasColumnName("price").IsRequired().HasPrecision(18, 2);
 
-                builder.Property(p => p.Rating).HasColumnName("rating").HasPrecision(3, 2).HasDefaultValue(5); 
+                builder.Property(p => p.Rating).HasColumnName("rating").HasPrecision(3, 2).HasDefaultValue(5); */
+                
                 builder.Property(p => p.NumberOfReviews).HasColumnName("number_of_reviews").HasDefaultValue(0);  
 
 

@@ -1,42 +1,41 @@
-﻿using Domain.Entities.Common; 
-using System.ComponentModel.DataAnnotations.Schema; 
+﻿using Domain.Entities.Common;
+using Domain.Entities.IntermediateSpace;
 
-namespace Domain.Entities.ProductSpace
+namespace Domain.Entities.ProductSpace;
+
+/// <summary>
+/// Конкретный вариант (SKU) товара.
+/// Например, "iPhone 14, Black, 128GB".
+/// </summary>
+public class ProductVariant : AuditableEntity<ProductVariant>
 {
+    
+    public Guid Id { get; set; }
+
     /// <summary>
-    /// Сущность, представляющая вариацию продукта.
-    /// Используется для управления характеристиками продуктов, такими как цвет или размер.
+    /// Ссылка на товар (Product).
+    /// В задаче класс Product не приводим, поэтому только Id.
     /// </summary> 
-    public class ProductVariant : SeoEntity<ProductVariant>
-    { 
-        public Guid Id { get; set; }
+    public Guid ProductId { get; set; }
 
-        /// <summary>
-        /// Уникальный идентификатор продукта, связанного с вариацией.
-        /// </summary> 
-        public Guid ProductId { get; set; }
+    /// <summary>
+    /// Уникальный артикул (SKU), обязательный.
+    /// </summary> 
+    public string Sku { get; set; } = string.Empty;
 
-        /// <summary>
-        /// Ссылка на продукт, для которого определена вариация.
-        /// </summary>
-        public virtual Product Product { get; set; } = null!;
+    /// <summary>
+    /// Допустим, внутренний или международный штрихкод.
+    /// Может быть не у каждого товара, поэтому null.
+    /// </summary> 
+    public string Barcode { get; set; } = string.Empty;
 
-        /// <summary>
-        /// Название вариации (например, "Цвет").
-        /// </summary> 
-        public string VariantName { get; set; } = string.Empty;
+    /// <summary>
+    /// Флаг "Активен ли вариант", чтобы временно отключать SKU.
+    /// </summary>
+    public bool IsActive { get; set; } = true;
+ 
 
-        /// <summary>
-        /// Значение вариации (например, "Красный").
-        /// </summary> 
-        public string VariantValue {  get; set; } = string.Empty;
-
-        /// <summary>
-        /// Количество товара, доступное для этой вариации.
-        /// </summary> 
-        public int StockQuantity { get; set; }
-
-      
-    }
-
+    // Навигационное свойство: один SKU может иметь много пар "атрибут-значение".
+    public virtual ICollection<ProductVariantAttributeValue> VariantAttributeValues { get; set; } = new List<ProductVariantAttributeValue>();
+    public virtual ICollection<SellerOffer> SellerOffers { get; set; } = new List<SellerOffer>();
 }

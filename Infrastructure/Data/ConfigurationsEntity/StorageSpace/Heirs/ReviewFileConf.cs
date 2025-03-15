@@ -1,4 +1,4 @@
-﻿using Domain.Entities._Storage;
+﻿using Domain.Entities.StorageSpace;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Entities.StorageSpace.Heirs;
 
 namespace Infrastructure.Data.ConfigurationsEntity.StorageSpace.Heirs
 {

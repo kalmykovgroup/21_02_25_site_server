@@ -1,48 +1,30 @@
-﻿using Domain.Entities.ProductSpace;
-using Domain.Entities.OrderSpace;
-using Infrastructure.Data.ConfigurationsEntity.ProductSpace;
-using Domain.Entities.AddressesSpace;
+﻿using Domain.Entities.ProductSpace; 
 using Domain.Entities.UserSpace;
-using Domain.Entities.CategorySpace;
-using Domain.Entities.Common;
+using Domain.Entities.CategorySpace; 
 using Domain.Entities.IntermediateSpace; 
-using Microsoft.EntityFrameworkCore;  
-using Infrastructure.Data.ConfigurationsEntity.Common;
-using Infrastructure.Data.ConfigurationsEntity.UserSpace;
-using Infrastructure.Data.ConfigurationsEntity;
-using Infrastructure.Data.ConfigurationsEntity.AddressesSpace;
-using Infrastructure.Data.ConfigurationsEntity.CategorySpace;
-using Infrastructure.Data.ConfigurationsEntity.IntermediateSpaceConf;
-using Infrastructure.Data.ConfigurationsEntity.OrderSpace;
-using Infrastructure.Data.ConfigurationsEntity.StatusesSpace; 
-using Domain.Entities.UserSpace.UserTypes;
-using Infrastructure.Data.ConfigurationsEntity.UserSpace.UserTypes;
-using Domain.Entities.AnalyticsSpace;
-using Infrastructure.Data.ConfigurationsEntity.BrandSpaceConf;
-using Infrastructure.Data.ConfigurationsEntity.InventorySpaceConf;
-using Infrastructure.Data.ConfigurationsEntity.LoyaltyProgramSpace.Bundle;
-using Infrastructure.Data.ConfigurationsEntity.LoyaltyProgramSpace.CouponSpace;
-using Infrastructure.Data.ConfigurationsEntity.LoyaltyProgramSpace.Discount;
-using Infrastructure.Data.ConfigurationsEntity.LoyaltyProgramSpace.Loyalty;
-using Infrastructure.Data.ConfigurationsEntity.NotificationsSpaceConf;
-using Infrastructure.Data.ConfigurationsEntity.StorageSpace.Heirs;
-using Infrastructure.Data.ConfigurationsEntity.StorageSpace;
-using Infrastructure.Data.ConfigurationsEntity.SupplierSpaceConf; 
-using Infrastructure.Data.ConfigurationsEntity.AddressesSpace.Heirs;
-using Infrastructure.Data.ConfigurationsEntity.PaymentSpace;
-using Infrastructure.Data.ConfigurationsEntity.StatusesSpace.Heirs;
+using Microsoft.EntityFrameworkCore;   
+using Infrastructure.Data.ConfigurationsEntity.AddressesSpace.Heirs; 
 using Application.Common.Interfaces;
+using AutoMapper;
+using Infrastructure.Data.DbInitializer;
+
 namespace Infrastructure.Data
 {
     public class AppDbContext : DbContext, IUnitOfWork
     {
         private readonly ChangeLogInterceptor _changeLogInterceptor = new();
 
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+        private readonly IMapper _mapper;
+
+        public AppDbContext(DbContextOptions<AppDbContext> options, IMapper mapper) : base(options)
+        {
+            _mapper = mapper;
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.AddInterceptors(_changeLogInterceptor);
+            optionsBuilder.AddInterceptors(_changeLogInterceptor)
+                .EnableSensitiveDataLogging(); // Включает логирование чувствительных данных;
             base.OnConfiguring(optionsBuilder);
         }
          
@@ -56,23 +38,18 @@ namespace Infrastructure.Data
         public DbSet<RecommendedGroup> RecommendedGroups { get; set; }
         public DbSet<RecommendedGroupProduct> RecommendedGroupProducts { get; set; }
          
-
+ 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-
-            base.OnModelCreating(modelBuilder);
-
+            
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(SupplierAddressConf).Assembly);
-             
-
-            new DefaultData(modelBuilder);
-
+            
+            Initializer.Set(modelBuilder, _mapper);
+            
+            base.OnModelCreating(modelBuilder);
         }
-         
-  
-
+        
         public async Task<ITransaction> BeginTransactionAsync(CancellationToken cancellationToken)
         {
             var transaction = await Database.BeginTransactionAsync(cancellationToken);

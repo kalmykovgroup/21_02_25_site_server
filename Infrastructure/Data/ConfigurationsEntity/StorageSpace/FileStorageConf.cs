@@ -1,4 +1,4 @@
-﻿using Domain.Entities._Storage;
+﻿using Domain.Entities.StorageSpace;
 using Domain.Entities.StatusesSpace;
 using Infrastructure.Data.ConfigurationsEntity.Common;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Entities.StorageSpace.Heirs;
 
 namespace Infrastructure.Data.ConfigurationsEntity.StorageSpace
 {
@@ -23,8 +24,7 @@ namespace Infrastructure.Data.ConfigurationsEntity.StorageSpace
 
             // Настройка TPH для дискриминатора FileCategory
             entity.HasDiscriminator<FileCategory>(t => t.FileCategory)
-                    .HasValue<FileStorage>(FileCategory.GeneralFile)
-                    .HasValue<ProductFile>(FileCategory.ProductFile)
+                    .HasValue<FileStorage>(FileCategory.GeneralFile) 
                     .HasValue<OrderFile>(FileCategory.OrderFile)
                     .HasValue<ReviewFile>(FileCategory.ReviewFile);
 
