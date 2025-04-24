@@ -75,7 +75,7 @@ public static class DefaultProducts
             foreach (var combination in allCombinations)
             {
                 //combination = { { "Цвет", "Титановый белый" }, { "Память", "128GB" } }
-                logger.LogInformation($"Combination: {string.Join(", ", combination.Select(c => $"{c.Key}: {c.Value}"))}");
+              //  logger.LogInformation($"Combination: {string.Join(", ", combination.Select(c => $"{c.Key}: {c.Value}"))}");
 
             
                 

@@ -26,9 +26,9 @@ public static class DefaultCategoryAttributes
             Category? category = categories.Where(c => c.Name == configuration.CategoryName).FirstOrDefault();
             
             if (category == null) throw new Exception($"Category not found: {configuration.CategoryName}");
-            
-            logger.LogInformation($"Category: name: {category.Name} id: {category.Id}");
-            
+
+            // logger.LogInformation($"Category: name: {category.Name} id: {category.Id}");
+
             // Проход по атрибутам продукта (color, storage и т.д.) ("Память", new[] { "128GB", "256GB", "512GB" })
             foreach (var attribute in configuration.Attributes)
             {
@@ -100,7 +100,7 @@ public static class DefaultCategoryAttributes
             }
         }
         
-        logger.LogInformation($"CategoryAttributes:  {categoryAttributes.Count, -5}");
+      /*  logger.LogInformation($"CategoryAttributes:  {categoryAttributes.Count, -5}");
         
         foreach (var categoryAttribute in categoryAttributes)
         {
@@ -123,7 +123,7 @@ public static class DefaultCategoryAttributes
             logger.LogInformation($" --- Values: {string.Join(", ", categoryAttributeValue.Value.Select(cav => cav.Value))}");
             logger.LogInformation($"\n");
         }
-        logger.LogInformation($"\n");
+        logger.LogInformation($"\n");*/
         List<CategoryAttributeValue> allAttributeValues = categoryAttributeValues
             .Values            // это коллекция List<CategoryAttributeValue>, которые хранятся в словаре
             .SelectMany(v => v) // "раскрываем" все списки в единую последовательность
