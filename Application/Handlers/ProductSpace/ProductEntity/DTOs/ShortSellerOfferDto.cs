@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Application.Handlers.ProductSpace.ProductEntity.DTOs
 {
-    public class ShortProductDto
+    public class ShortSellerOfferDto
     {
         public Guid Id { get; set; } 
+        public Guid SellerId { get; set; } 
+        public Guid ProductVariantId { get; set; } 
         public string Name { get; set; } = string.Empty;
         public decimal? OriginalPrice { get; set; }
         public decimal Price { get; set; }
@@ -18,7 +20,7 @@ namespace Application.Handlers.ProductSpace.ProductEntity.DTOs
 
         public bool IsDiscount => OriginalPrice != null && DiscountPercentage != null;
 
-        public List<OfferImageDto> Images { get; set; } = new();
+        public List<SellerOfferImageDto> Images { get; set; } = new();
 
     }
 }

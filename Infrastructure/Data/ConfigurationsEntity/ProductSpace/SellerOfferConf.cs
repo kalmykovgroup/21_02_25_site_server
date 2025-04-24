@@ -25,6 +25,8 @@ public class SellerOfferConf : AuditableEntityConf<SellerOffer>
         entity.Property(e => e.SellerId)
             .HasColumnName("seller_id")
             .IsRequired();
+        
+        entity.Property(e => e.Name).HasColumnName("name").HasMaxLength(255).IsRequired();
 
         entity.Property(e => e.Price)
             .HasColumnName("price")

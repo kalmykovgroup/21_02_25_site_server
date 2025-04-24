@@ -1,6 +1,6 @@
 ﻿namespace Application.Handlers.ProductSpace.ProductEntity.DTOs;
 
-public class OfferImageDto
+public class SellerOfferImageDto
 {
     public int Index { get; set; }
     

@@ -29,16 +29,16 @@ namespace Api.Controllers
         }
 
 
-        [HttpGet("{id}")]
+        /*[HttpGet("{id}")]
         public async Task<ActionResult<LongProductDto>> GetById(Guid id)
         {
             var query = new GetProductByIdQuery(id);
             var product = await _mediator.Send(query);
             return product != null ? Ok(product) : NotFound();
-        }
+        }*/
 
         [HttpGet]
-        public async Task<ActionResult<ProductPagedResponse>> GetFilterProducts(
+        public async Task<ActionResult<ProductsPagedResponse>> GetFilterProducts(
             [FromQuery] string? search,
             [FromQuery] Guid? categoryId,
             [FromQuery] int page = 1)
@@ -47,7 +47,7 @@ namespace Api.Controllers
              
             _logger.LogWarning("Запрос: search: {search} | categoryId: {categoryId} | page: {page}", search, categoryId, page);
 
-            ProductPagedResponse result = await _mediator.Send(new GetFilteredProductsQuery(search, categoryId, page)); 
+            ProductsPagedResponse result = await _mediator.Send(new GetFilteredProductsQuery(search, categoryId, page)); 
 
             return Ok(result);
         }
@@ -55,7 +55,7 @@ namespace Api.Controllers
       
 
         [HttpGet("main-page")]
-        public async Task<ActionResult<ProductPagedResponse>> MainPage([FromQuery] int page = 1)
+        public async Task<ActionResult<ProductsPagedResponse>> MainPage([FromQuery] int page = 1)
         {
             ProductsMainPagedResponse result = await _mediator.Send(new GetProductsMainPagedQuery(page)); 
 
@@ -63,7 +63,7 @@ namespace Api.Controllers
         }
         
         [HttpGet("suggestions")]
-        public async Task<ActionResult<ProductPagedResponse>> Suggestions([FromQuery] string query){
+        public async Task<ActionResult<ProductsPagedResponse>> Suggestions([FromQuery] string query){
 
 
             GetProductNameSuggestionsResponse result = await _mediator.Send(new GetProductNameSuggestionsQuery(query));

@@ -73,12 +73,7 @@ namespace Domain.Entities.ProductSpace
         /// </summary> 
         public string? Description { get; set; } = null;
 
- 
-
-       public virtual ICollection<SellerOffer> Offers { get; set; } = new List<SellerOffer>();
-
- 
-
+        
         /// <summary>
         /// Доступное количество продукта на складе.
         /// </summary>

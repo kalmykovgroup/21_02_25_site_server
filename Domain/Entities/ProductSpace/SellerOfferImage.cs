@@ -2,7 +2,7 @@
 
 namespace Domain.Entities.ProductSpace;
 
-public class OfferImage : AuditableEntity<OfferImage>
+public class SellerOfferImage : AuditableEntity<SellerOfferImage>
 {
     public Guid Id { get; set; }
     public Guid SellerOfferId { get; set; }

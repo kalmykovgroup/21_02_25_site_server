@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Application.Handlers.ProductSpace.WishListEntity.DTOs
 {
-    public class WishListItemDto : ShortProductDto
+    public class WishListItemDto : ShortSellerOfferDto
     {
     }
 }

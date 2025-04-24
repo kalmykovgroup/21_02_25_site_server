@@ -29,7 +29,7 @@ public class ProductVariantAttributeValueConf : IEntityTypeConfiguration<Product
 
         // Связи
         entity.HasOne(e => e.ProductVariant)
-            .WithMany(e => e.VariantAttributeValues)
+            .WithMany(e => e.ProductVariantAttributeValues)
             .HasForeignKey(e => e.ProductVariantId)
             .OnDelete(DeleteBehavior.Cascade);
 

@@ -12,6 +12,6 @@ namespace Application.Handlers.ProductSpace.ProductEntity.DTOs
         public string Title { get; set; } = string.Empty;
         public string? Background { get; set; } = string.Empty;
         public string Color { get; set; } = string.Empty;
-        public IEnumerable<ShortProductDto> Products { get; set; } = null!;
+        public IEnumerable<ShortSellerOfferDto> Products { get; set; } = null!;
     }
 }

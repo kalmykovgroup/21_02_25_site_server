@@ -39,7 +39,7 @@ public class ProductVariantConf : IEntityTypeConfiguration<ProductVariant>
 
         entity.HasIndex(e => e.Barcode)
             .IsUnique(true)
-            .HasFilter("[barcode IS NOT NULL");  
+            .HasFilter("barcode IS NOT NULL");  
  
     }
 }

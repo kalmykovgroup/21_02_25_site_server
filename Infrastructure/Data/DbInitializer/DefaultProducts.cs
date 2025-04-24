@@ -2,35 +2,55 @@
 using Domain.Entities.CategorySpace;
 using Domain.Entities.IntermediateSpace;
 using Domain.Entities.ProductSpace;
-using Microsoft.EntityFrameworkCore; 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Data.DbInitializer;
 
 public static class DefaultProducts
 {
-    public static  List<(Product product, List<ProductVariant> productVariants)> CreateDefaultProducts(
+    
+    private static readonly Random _random = new Random();
+    
+    public static  List<(Product product, List<ProductVariant> productVariants, List<ProductVariantAttributeValue> productVariantAttributeValues)> CreateDefaultProducts(
         this ModelBuilder modelBuilder, 
         (string CategoryName, string Name, string Brand, Dictionary<string, string[]> Attributes)[] productsConfigurations, 
         List<CategoryAttribute> categoryAttributes,
         Dictionary<Guid, List<CategoryAttributeValue>> categoryAttributeValues,
-        Guid categoryId,
         Guid supplierId,
+        List<Category> categories,
         List<Brand> brands,
-        Guid createdByUserId)
+        Guid createdByUserId,
+        ILogger logger)
     {
         
-        List<(Product product, List<ProductVariant> productVariants)> productsWithVariants = new List<(Product product, List<ProductVariant> productVariants)>();
+        List<(Product product, List<ProductVariant> productVariants, List<ProductVariantAttributeValue> productVariantAttributeValues)> productsWithVariants = new ();
         
         // Создаем продукты, item -> { categoryName, name, brand, attributes }
         // "iPhone 16 Pro Max"
         foreach (var item in productsConfigurations)
         {
+            
+            Brand? brand = brands.FirstOrDefault(b => b.Name == item.Brand);
+
+            if (brand == null)
+            {
+                throw new Exception($"Brand not found: {item.Brand}");
+            }
+            
+            Category? categoryProduct = categories.Where(c => c.Name == item.CategoryName).FirstOrDefault();
+            
+            if (categoryProduct == null)
+            {
+                throw new Exception($"Category not found: {item.CategoryName}");
+            }
+            
             var product = new Product()
             {
                 Id = Guid.NewGuid(),
                 Name = item.Name,
-                CategoryId = categoryId,
-                BrandId = brands.Where(b => b.Name == item.Brand).First().Id,
+                CategoryId = categoryProduct.Id,
+                BrandId = brand.Id,
 
                 SupplierId = supplierId,
                 NumberOfReviews = 0,
@@ -51,27 +71,50 @@ public static class DefaultProducts
             // Вызываем метод, который вернёт нам List<Dictionary<string, string>> со всеми комбинациями.
             List<Dictionary<string, string>> allCombinations = GetAllCombinations(item.Attributes);
 
+            
             foreach (var combination in allCombinations)
             {
+                //combination = { { "Цвет", "Титановый белый" }, { "Память", "128GB" } }
+                logger.LogInformation($"Combination: {string.Join(", ", combination.Select(c => $"{c.Key}: {c.Value}"))}");
+
+            
+                
                 var productVariant = new ProductVariant()
                 {
                     Id = Guid.NewGuid(),
                     ProductId = product.Id,
-                    CreatedByUserId = createdByUserId
+                    CreatedByUserId = createdByUserId,
+                    IsActive = true,
                 };
+                 
 
+               //combination = { { "Цвет", "Титановый белый" }, { "Память", "128GB" } }
+               //pair = { "Цвет", "Титановый белый" } 
                 foreach (var pair in combination)
                 {
-                    // Получаем атрибут категории по имени ("Память", "Цвет" и т.д.)
-                    CategoryAttribute categoryAttribute =  categoryAttributes
-                        .Where(ca => ca.Name == pair.Key && ca.CategoryId == categoryId)
-                        .First();
                     
-                    CategoryAttributeValue categoryAttributeValue = categoryAttributeValues
+                    //Ранее мы создали CategoryAttributes и CategoryAttributeValues на основе списка продуктов
+                    //Теперь мы можем получить из из списка, который передан в базу
+                  
+                    // Получаем атрибут категории по имени ("Память", "Цвет" и т.д.)
+                    CategoryAttribute? categoryAttribute =  categoryAttributes
+                        .Where(ca => ca.Name == pair.Key && ca.CategoryId == categoryProduct.Id)
+                        .FirstOrDefault();
+                    
+                    if(categoryAttribute == null) throw new Exception($"Category attribute not found: {pair.Key}");
+                    
+                     
+                    //Key - это categoryAttribute.Id , Value - это список значений атрибута (256GB, 512GB и т.д.)
+                    
+                    CategoryAttributeValue? categoryAttributeValue = categoryAttributeValues
                         .Where(cav => cav.Key == categoryAttribute.Id)
                         .First().Value //Получили список List<CategoryAttributeValue> (256GB, 512GB и т.д.)
                         .Where(cavv => cavv.Value == pair.Value)
-                        .First();
+                        .FirstOrDefault();
+                    
+                    
+                    
+                    if (categoryAttributeValue == null) throw new Exception($"Category attribute value not found: {pair.Value}");
                     
                     productVariantAttributeValues.Add(new ProductVariantAttributeValue()
                     {
@@ -81,6 +124,9 @@ public static class DefaultProducts
                         CategoryAttributeId = categoryAttribute.Id,
                     });
                 }
+                
+                productVariant.Sku = GenerateSku(categoryProduct.Name, brand.Name);
+                productVariant.Barcode = GenerateBarcode();
                     
                 productVariants.Add(productVariant);
             }
@@ -88,7 +134,7 @@ public static class DefaultProducts
             modelBuilder.Entity<ProductVariant>().HasData(productVariants);
             modelBuilder.Entity<ProductVariantAttributeValue>().HasData(productVariantAttributeValues);
             
-            productsWithVariants.Add((product,  productVariants));
+            productsWithVariants.Add((product,  productVariants, productVariantAttributeValues));
         }
         
         modelBuilder.Entity<Product>().HasData(productsWithVariants.Select(pv => pv.product));
@@ -160,4 +206,53 @@ public static class DefaultProducts
 
         return result;
     }
+    
+    /// <summary>
+    /// Пример функции формирования SKU на базе названия, цвета, объёма памяти.
+    /// Убираем пробелы/неугодные символы и соединяем.
+    /// </summary>
+    public static string GenerateSku(string category, string brand)
+    {
+        // Берем первые 3 буквы категории и бренда (если слово короче - добавляем)
+        string categoryCode = (category.Length >= 3) ? category.Substring(0, 3).ToUpper() : category.ToUpper().PadRight(3, 'X');
+        string brandCode = (brand.Length >= 3) ? brand.Substring(0, 3).ToUpper() : brand.ToUpper().PadRight(3, 'X');
+
+        // Генерируем случайный код (6 символов: буквы + цифры)
+        string randomCode = GenerateRandomString(6);
+
+        // Формируем SKU
+        return $"{categoryCode}-{brandCode}-{randomCode}";
+    }
+    
+    private static string GenerateRandomString(int length)
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        return new string(Enumerable.Range(0, length).Select(_ => chars[_random.Next(chars.Length)]).ToArray());
+    }
+    
+    public static string GenerateBarcode()
+    {
+        // Генерируем первые 12 цифр случайно
+        string barcodeWithoutChecksum = string.Concat(Enumerable.Range(0, 12).Select(_ => _random.Next(0, 10)));
+
+        // Вычисляем контрольную цифру
+        int checksum = CalculateEAN13Checksum(barcodeWithoutChecksum);
+
+        // Полный штрих-код
+        return barcodeWithoutChecksum + checksum;
+    }
+
+    private static int CalculateEAN13Checksum(string barcode)
+    {
+        int sum = 0;
+        for (int i = 0; i < barcode.Length; i++)
+        {
+            int digit = barcode[i] - '0';
+            sum += (i % 2 == 0) ? digit : digit * 3;
+        }
+        int checksum = (10 - (sum % 10)) % 10;
+        return checksum;
+    }
+
+
 }

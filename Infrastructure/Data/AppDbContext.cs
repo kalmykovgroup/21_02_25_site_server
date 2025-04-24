@@ -7,6 +7,7 @@ using Infrastructure.Data.ConfigurationsEntity.AddressesSpace.Heirs;
 using Application.Common.Interfaces;
 using AutoMapper;
 using Infrastructure.Data.DbInitializer;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Data
 {
@@ -15,10 +16,12 @@ namespace Infrastructure.Data
         private readonly ChangeLogInterceptor _changeLogInterceptor = new();
 
         private readonly IMapper _mapper;
+        private readonly ILogger _logger;
 
-        public AppDbContext(DbContextOptions<AppDbContext> options, IMapper mapper) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options, IMapper mapper, ILogger<AppDbContext> logger) : base(options)
         {
             _mapper = mapper;
+            _logger = logger;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -37,6 +40,8 @@ namespace Infrastructure.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<RecommendedGroup> RecommendedGroups { get; set; }
         public DbSet<RecommendedGroupProduct> RecommendedGroupProducts { get; set; }
+        
+        public DbSet<SellerOffer> SellerOffers { get; set; }
          
  
 
@@ -45,7 +50,7 @@ namespace Infrastructure.Data
             
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(SupplierAddressConf).Assembly);
             
-            Initializer.Set(modelBuilder, _mapper);
+            Initializer.Set(modelBuilder, _mapper, _logger);
             
             base.OnModelCreating(modelBuilder);
         }

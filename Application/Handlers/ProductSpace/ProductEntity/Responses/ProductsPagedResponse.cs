@@ -14,12 +14,12 @@ namespace Application.Handlers.ProductSpace.ProductEntity.Responses
     /// номер текущей страницы и эффективный размер страницы (количество элементов, 
     /// возвращаемых на данной странице).
     /// </summary>
-    public class ProductPagedResponse : BaseResponse
+    public class ProductsPagedResponse : BaseResponse
     {
         /// <summary>
         /// Содержит коллекцию элементов для текущей страницы.
         /// </summary>
-        public IEnumerable<ShortProductDto> Items { get; }
+        public IEnumerable<ShortSellerOfferDto> Items { get; }
 
         /// <summary>
         ///  Есть ли еще записи 
@@ -36,7 +36,7 @@ namespace Application.Handlers.ProductSpace.ProductEntity.Responses
         /// <param name="items">Коллекция элементов для текущей страницы.</param>
         /// <param name="hasMore">Есть ли еще записи.</param>
         /// <param name="page">Номер текущей страницы.</param> 
-        public ProductPagedResponse(IEnumerable<ShortProductDto> items, bool hasMore, int page)
+        public ProductsPagedResponse(IEnumerable<ShortSellerOfferDto> items, bool hasMore, int page)
         {
             Items = items;
             HasMore = hasMore;

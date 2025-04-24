@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Application.Handlers.ProductSpace.ProductEntity.Handlers
 {
-    public class GetFilteredProductsHandler : IRequestHandler<GetFilteredProductsQuery, ProductPagedResponse>
+    public class GetFilteredProductsHandler : IRequestHandler<GetFilteredProductsQuery, ProductsPagedResponse>
     {
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
@@ -23,9 +23,9 @@ namespace Application.Handlers.ProductSpace.ProductEntity.Handlers
         }
          
 
-        public async Task<ProductPagedResponse> Handle(GetFilteredProductsQuery request, CancellationToken cancellationToken)
+        public async Task<ProductsPagedResponse> Handle(GetFilteredProductsQuery request, CancellationToken cancellationToken)
         {
-            var (products, hasMore) = await _productRepository.GetAllProductsAsync(
+            var (products, hasMore) = await _productRepository.GetAllSellerOffersAsync(
                                                                          request.Search,
                                                                          request.CategoryId,
                                                                          request.Page,
@@ -34,9 +34,9 @@ namespace Application.Handlers.ProductSpace.ProductEntity.Handlers
                                                                          cancellationToken
                                                                      );
 
-            var productsDto = _mapper.Map<IEnumerable<ShortProductDto>>(products);
+            var productsDto = _mapper.Map<IEnumerable<ShortSellerOfferDto>>(products);
 
-            return new ProductPagedResponse(productsDto, hasMore, request.Page);
+            return new ProductsPagedResponse(productsDto, hasMore, request.Page);
 
         }
     }

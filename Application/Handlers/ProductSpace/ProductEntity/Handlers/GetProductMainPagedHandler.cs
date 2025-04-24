@@ -34,7 +34,7 @@ namespace Application.Handlers.ProductSpace.ProductEntity.Handlers
 
         public async Task<ProductsMainPagedResponse> Handle(GetProductsMainPagedQuery request, CancellationToken cancellationToken)
         {
-            var (products, hasMoreProducts) = await _productRepository.GetAllProductsAsync(
+            var (products, hasMoreProducts) = await _productRepository.GetAllSellerOffersAsync(
                 null, 
                 null,
                 request.Page,
@@ -44,7 +44,7 @@ namespace Application.Handlers.ProductSpace.ProductEntity.Handlers
 
             (IEnumerable<RecommendedGroup> recommendedGroups, bool hasMoreRecommendedGroups) = await _recommendedGroupRepository.GetGroups(request.Page, _firstPageSizeRecommendedGroups, _nextPageSizeRecommendedGroups);
 
-            var productsDto = _mapper.Map<IEnumerable<ShortProductDto>>(products);
+            var productsDto = _mapper.Map<IEnumerable<ShortSellerOfferDto>>(products);
 
             var recommendedGroupsDto = _mapper.Map<IEnumerable<RecommendedGroupDto>>(recommendedGroups); 
 

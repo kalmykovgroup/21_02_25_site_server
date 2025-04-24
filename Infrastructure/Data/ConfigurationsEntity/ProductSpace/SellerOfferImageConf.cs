@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Data.ConfigurationsEntity.ProductSpace;
 
-public class OfferImageConf : AuditableEntityConf<OfferImage>
+public class SellerOfferImageConf : AuditableEntityConf<SellerOfferImage>
 {
-    public override void Configure(EntityTypeBuilder<OfferImage> builder)
+    public override void Configure(EntityTypeBuilder<SellerOfferImage> builder)
     {
         base.Configure(builder);
         
-        builder.ToTable("offer_images");
+        builder.ToTable("seller_offer_images");
         
         
         builder.HasKey(pi => pi.Id); // Первичный ключ

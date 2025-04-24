@@ -11,12 +11,9 @@ namespace Domain.Interfaces.Repositories.ProductSpace
 {
     public interface IProductRepository : IBaseRepository
     {
+ 
 
-        Task<int> UpdateAsync(Product product, CancellationToken cancellationToken = default);
-
-        Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default);
-
-        public Task<(IEnumerable<Product> Products, bool HasMore)> GetAllProductsAsync(
+        public Task<(IEnumerable<SellerOffer> SellerOffers, bool HasMore)> GetAllSellerOffersAsync(
            string? search,
            Guid? categoryId,
            int page,

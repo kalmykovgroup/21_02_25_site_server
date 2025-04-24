@@ -19,7 +19,7 @@ namespace Infrastructure.Data.ConfigurationsEntity.ProductSpace
                 builder.Property(p => p.CategoryId).HasColumnName("category_id").IsRequired();
                 builder.Property(p => p.SupplierId).HasColumnName("supplier_id").IsRequired();
 
-                builder.Property(p => p.Name).HasColumnName("name").IsRequired();
+                builder.Property(p => p.Name).HasColumnName("name").HasMaxLength(255).IsRequired();
                 builder.Property(p => p.Description).HasColumnName("description").HasMaxLength(1000).IsRequired(false);
  
 

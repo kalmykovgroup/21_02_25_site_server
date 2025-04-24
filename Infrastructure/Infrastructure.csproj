@@ -38,6 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Data\Default\Products\Filter\" />
     <Folder Include="Data\Default\Products\Phones\" />
   </ItemGroup>
 

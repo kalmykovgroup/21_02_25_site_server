@@ -14,12 +14,11 @@ namespace Application.Handlers.ProductSpace.ProductEntity.Mapping
         {
 
 
-            // 🔹 Маппинг между сущностью `Product` и `ProductDto`
-            CreateMap<Product, LongProductDto>();
-            CreateMap<Product, ShortProductDto>();
-            CreateMap<Product, WishListItemDto>();
+            // 🔹 Маппинг между сущностью `Product` и `ProductDto` 
+            CreateMap<SellerOffer, ShortSellerOfferDto>();
+            CreateMap<SellerOffer, WishListItemDto>();
             
-            CreateMap<OfferImage, OfferImageDto>()
+            CreateMap<SellerOfferImage, SellerOfferImageDto>()
                 .ForMember(dest => dest.Urls, opt => opt.MapFrom(src => GenerateImageUrls(src)));
 
 
@@ -28,14 +27,14 @@ namespace Application.Handlers.ProductSpace.ProductEntity.Mapping
             CreateMap<RecommendedGroup, RecommendedGroupDto>()
             .ForMember(dest => dest.Products, opt => opt.MapFrom((src, dest, destMember, context) =>
                 src.RecommendedGroupProducts.Select(rgp =>
-                    context.Mapper.Map<ShortProductDto>(rgp.Product) // ✅ Автоматически маппит `Product → ShortProductDto`
+                    context.Mapper.Map<ShortSellerOfferDto>(rgp.Product) // ✅ Автоматически маппит `Product → ShortProductDto`
                 )
             ));
 
 
         }
         
-        private static Dictionary<string, string> GenerateImageUrls(OfferImage img)
+        private static Dictionary<string, string> GenerateImageUrls(SellerOfferImage img)
         {
             return new Dictionary<string, string>
             {

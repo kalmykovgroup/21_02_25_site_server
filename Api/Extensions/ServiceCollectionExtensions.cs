@@ -23,8 +23,7 @@ using Infrastructure.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-
+using Microsoft.IdentityModel.Tokens; 
 namespace Api.Extensions;
 
 public static class ServiceCollectionExtensions
@@ -66,7 +65,7 @@ public static class ServiceCollectionExtensions
                 options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
             });
         services.AddEndpointsApiExplorer();
-        
+  
         return services;
     }
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)

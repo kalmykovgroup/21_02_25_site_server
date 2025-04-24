@@ -13,7 +13,7 @@ namespace Application.Handlers.ProductSpace.ProductEntity.Responses
         /// <summary>
         /// Содержит коллекцию элементов для текущей страницы.
         /// </summary>
-        public IEnumerable<ShortProductDto> Products { get; set; }
+        public IEnumerable<ShortSellerOfferDto> Products { get; set; }
 
         public bool HasMoreProducts { get; }
 
@@ -31,7 +31,7 @@ namespace Application.Handlers.ProductSpace.ProductEntity.Responses
         /// <param name="products">Коллекция элементов для текущей страницы.</param> 
         /// <param name="page">Номер текущей страницы.</param> 
         public ProductsMainPagedResponse(
-            IEnumerable<ShortProductDto> products,
+            IEnumerable<ShortSellerOfferDto> products,
             bool hasMoreProducts,
             IEnumerable<RecommendedGroupDto> recommendedGroupsDto, 
             bool hasMoreRecommendedGroups,

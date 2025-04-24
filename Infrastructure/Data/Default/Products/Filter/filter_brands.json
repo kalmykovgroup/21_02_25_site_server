@@ -1,0 +1,30 @@
+{ 
+    "Name": "Бренд",
+    "values": [
+        "Acer", "AGM", "Alcatel", "Apple", "Archos", "ASUS",
+        "Balmuda", "BlackBerry", "Blackview", "BQ",
+        "Caterpillar", "Coolpad", "CUBOT",
+        "DEXP", "DOOGEE",
+        "ELARI",
+        "Fujitsu",
+        "Google",
+        "Haier", "Harman/Kardon", "Hisense", "HONOR", "HP", "HTC", "HUAWEI",
+        "Infinix", "Intel", "Itel",
+        "JEEP",
+        "KYOCERA",
+        "Land Rover", "Leagoo", "Lenovo", "LG",
+        "Meizu", "Micromax", "Motorola",
+        "Nokia", "Nothing", "Nubia",
+        "OnePlus", "OPPO",
+        "Palm", "POCO", "PORSCHE",
+        "Qualcomm",
+        "realme", "Reno",
+        "Samsung", "Sharp", "Sony", "Sony Ericsson",
+        "TCL", "TECNO",
+        "Ulefone",
+        "vivo",
+        "Wiko",
+        "Xiaomi",
+        "ZTE"
+    ]
+}

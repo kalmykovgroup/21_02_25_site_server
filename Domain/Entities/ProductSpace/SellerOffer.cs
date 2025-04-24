@@ -26,6 +26,12 @@ public class SellerOffer: AuditableEntity<SellerOffer>
     /// Цена за единицу товара.
     /// </summary> 
     public decimal Price { get; set; }
+    
+    
+    /// <summary>
+    /// Название продукта.
+    /// </summary>  
+    public string Name {  get; set; } = string.Empty;
 
     /// <summary>
     /// Доступное количество на складе.
@@ -45,5 +51,5 @@ public class SellerOffer: AuditableEntity<SellerOffer>
     public virtual Seller Seller { get; set; } = null!;
     
     
-    public virtual ICollection<OfferImage> Images { get; set; } = new List<OfferImage>();
+    public virtual ICollection<SellerOfferImage> Images { get; set; } = new List<SellerOfferImage>();
 }

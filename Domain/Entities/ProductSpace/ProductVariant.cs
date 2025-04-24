@@ -17,6 +17,7 @@ public class ProductVariant : AuditableEntity<ProductVariant>
     /// В задаче класс Product не приводим, поэтому только Id.
     /// </summary> 
     public Guid ProductId { get; set; }
+    public virtual Product Product { get; set; } = null!;
 
     /// <summary>
     /// Уникальный артикул (SKU), обязательный.
@@ -36,6 +37,6 @@ public class ProductVariant : AuditableEntity<ProductVariant>
  
 
     // Навигационное свойство: один SKU может иметь много пар "атрибут-значение".
-    public virtual ICollection<ProductVariantAttributeValue> VariantAttributeValues { get; set; } = new List<ProductVariantAttributeValue>();
+    public virtual ICollection<ProductVariantAttributeValue> ProductVariantAttributeValues { get; set; } = new List<ProductVariantAttributeValue>();
     public virtual ICollection<SellerOffer> SellerOffers { get; set; } = new List<SellerOffer>();
 }
