@@ -27,6 +27,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens; 
 namespace Api.Extensions;
+using System.Security.Cryptography.X509Certificates;
 
 public static class ServiceCollectionExtensions
 {
@@ -207,25 +208,25 @@ public static class ServiceCollectionExtensions
                 options.Configuration = redisConnection;
             });
         }
-
         if (isProduction)
         {
-            var certs_dir = GetRequiredEnv("CERTS_DIR");
-            var secrets_dir = GetRequiredEnv("SECRETS_DIR");
-            var app_name = GetRequiredEnv("APPLICATION_NAME");
+            var certsDir = GetRequiredEnv("CERTS_DIR"); 
+            var appName = GetRequiredEnv("APPLICATION_NAME");
+            var cert_password_file = GetRequiredEnv("CERT_PASSWORD_FILE");
 
-            var certPath = $"{certs_dir}/cert.pfx";
-            var certPassword = File.ReadAllText($"{secrets_dir}/cert_password").Trim();
+            var certPath = Path.Combine(certsDir, "cert.pem");
+            var keyPath = Path.Combine(certsDir, "key.pem"); 
 
-            if (!File.Exists(certPath))
-                throw new FileNotFoundException("Сертификат не найден", certPath);
+            if (!File.Exists(certPath) || !File.Exists(keyPath))
+                throw new FileNotFoundException("PEM-файлы не найдены");
 
-            var cert = new X509Certificate2(certPath, certPassword);
+            var certPassword = File.ReadAllText(cert_password_file).Trim();
+            var cert = X509Certificate2.CreateFromEncryptedPemFile(certPath, certPassword, keyPath);
 
             services.AddDataProtection()
                 .PersistKeysToFileSystem(new DirectoryInfo("/keys"))
                 .ProtectKeysWithCertificate(cert)
-                .SetApplicationName(app_name);
+                .SetApplicationName(appName);
         }
 
 

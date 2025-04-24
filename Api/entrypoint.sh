@@ -1,20 +1,24 @@
 ﻿#!/bin/bash
 
-CERT_DIR=/certs
-CERT_PFX=$CERT_DIR/cert.pfx
-CERT_PASSWORD=$(cat /run/secrets/cert_password)
+: "${$CERT_DIR:?❌ $CERT_DIR не задан! Проверь переменные окружения.}" 
+: "${SECRETS_DIR:?❌ SECRETS_DIR не задан! Проверь переменные окружения.}" 
+ 
+CERT_PASSWORD=$(cat ${CERT_PASSWORD_FILE})
 
-# Создаём сертификат только если он ещё не существует
-if [ ! -f "$CERT_PFX" ]; then
-  echo "[entrypoint] 🔐 Создание нового сертификата cert.pfx"
-  openssl req -x509 -newkey rsa:4096 -keyout $CERT_DIR/key.pem -out $CERT_DIR/cert.pem \
-    -days 365 -nodes -subj "/CN=dataprotection"
+CERT_PATH=$CERT_DIR/cert.pem
+KEY_PATH=$CERT_DIR/key.pem
 
-  openssl pkcs12 -export -out $CERT_PFX -inkey $CERT_DIR/key.pem -in $CERT_DIR/cert.pem \
-    -passout pass:$CERT_PASSWORD
+# Генерация ключа и сертификата только если их ещё нет
+if [ ! -f "$CERT_PATH" ] || [ ! -f "$KEY_PATH" ]; then
+  echo "[entrypoint] 🔐 Генерация PEM-сертификата"
 
-  rm $CERT_DIR/key.pem $CERT_DIR/cert.pem
+  # Приватный ключ с паролем
+  openssl genrsa -aes256 -passout pass:$CERT_PASSWORD -out $KEY_PATH 4096
+
+  # Публичный сертификат
+  openssl req -new -x509 -key $KEY_PATH -passin pass:$CERT_PASSWORD \
+    -out $CERT_PATH -days 365 -subj "/CN=dataprotection"
 fi
 
-# Запускаем .NET приложение
+# Запуск dotnet
 exec "$@"

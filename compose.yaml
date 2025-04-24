@@ -15,11 +15,12 @@
       POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
-      CERTS_DIR: /certs
-      SECRETS_DIR: /run/secrets
-      APPLICATION_NAME: "KalmykovGroup"
+      CERTS_DIR: /certs 
+      APPLICATION_NAME: KalmykovGroup
+      CERT_PASSWORD_FILE: /run/secrets/cert_password
     volumes:
         - ./Secrets/postgres_password.txt:/run/secrets/postgres_password:ro
+        - ./Secrets/cert_password.txt:/run/secrets/cert_password:ro
         - ./dataprotection:/keys
         - ./certs:/certs
   db:
