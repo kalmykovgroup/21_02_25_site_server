@@ -44,9 +44,11 @@ namespace Api
             
             //Application
             builder.Services.AddApplicationServices(builder.Configuration);
-            
+
+            IWebHostEnvironment env = builder.Environment;
+
             //Infrastructure
-            builder.Services.AddInfrastructureServices(builder.Configuration);
+            builder.Services.AddInfrastructureServices(builder.Configuration, !builder.Environment.IsDevelopment());
    
             
              var customTheme = new SystemConsoleTheme(new Dictionary<ConsoleThemeStyle, SystemConsoleThemeStyle>

@@ -96,7 +96,7 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration, bool isProduction)
     {
         // Регистрация DbContext, репозиториев, кэш-сервисов и т.д.
         // Регистрация репозиториев
@@ -150,12 +150,46 @@ public static class ServiceCollectionExtensions
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
                 };
             });
-        
+
+
+        string GetRequiredEnv(string key) => Environment.GetEnvironmentVariable(key)
+            ?? throw new InvalidOperationException($"Ожидалась переменная окружения '{key}', но она не задана.");
+
+
+        string? connectionString;
+
+        if (isProduction)
+        {
+            // В проде читаем из env-переменных и файла
+            var db = GetRequiredEnv("POSTGRES_DB");
+            var user = GetRequiredEnv("POSTGRES_USER");
+            var passwordFile = GetRequiredEnv("POSTGRES_PASSWORD_FILE");
+            var db_host = GetRequiredEnv("DB_HOST");
+            var db_port = GetRequiredEnv("DB_PORT");
+
+            if (!File.Exists(passwordFile)) throw new FileNotFoundException($"Файл с паролем не найден: {passwordFile}");
+
+            var password = File.ReadAllText(passwordFile).Trim();
+
+            connectionString = $"Host={db_host};Port={db_port};Database={db};Username={user};Password={password}";
+            Console.WriteLine("🔐 Using production environment variables for DB connection.");
+        }
+        else
+        {
+            // В dev — из конфигурации
+            connectionString = configuration.GetConnectionString("DefaultConnection")
+                ?? throw new InvalidOperationException("Строка подключения не найдена в конфигурации.");
+            Console.WriteLine("🧪 Using development config file for DB connection.");
+        }
+
         services.AddDbContext<AppDbContext>(options =>
-            options.UseLazyLoadingProxies().UseNpgsql(
-                configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("DefaultConnection не настроен в appsettings.json.")
-            )
-        );
+            options.UseNpgsql(connectionString));
+
+        /* services.AddDbContext<AppDbContext>(options =>
+             options.UseLazyLoadingProxies().UseNpgsql(
+                 configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("DefaultConnection не настроен в appsettings.json.")
+             )
+         );*/
 
         services.AddScoped<IUnitOfWork, AppDbContext>();
         
