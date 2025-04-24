@@ -1,8 +1,7 @@
 ﻿#!/bin/bash
 
 
-: "${CERTS_DIR:?❌ CERTS_DIR не задан! Проверь переменные окружения.}"
-: "${SECRETS_DIR:?❌ SECRETS_DIR не задан! Проверь переменные окружения.}"
+: "${CERTS_DIR:?❌ CERTS_DIR не задан! Проверь переменные окружения.}" 
 : "${CERT_PASSWORD_FILE:?❌ CERT_PASSWORD_FILE не задан!}"
 
 if [ ! -f "$CERT_PASSWORD_FILE" ]; then
