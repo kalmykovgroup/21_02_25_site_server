@@ -4,6 +4,9 @@
 COPY ./Api/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
+# Удаляем BOM из entrypoint.sh
+RUN sed -i '1s/^\xEF\xBB\xBF//' /entrypoint.sh
+
 USER $APP_UID
 WORKDIR /app 
 

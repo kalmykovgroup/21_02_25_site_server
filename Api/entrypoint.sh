@@ -12,8 +12,8 @@ fi
  
 CERT_PASSWORD=$(cat ${CERT_PASSWORD_FILE})
 
-CERT_PATH=$CERT_DIR/cert.pem
-KEY_PATH=$CERT_DIR/key.pem
+CERT_PATH=$CERTS_DIR/cert.pem
+KEY_PATH=$CERTS_DIR/key.pem
 
 # Генерация ключа и сертификата только если их ещё нет
 if [ ! -f "$CERT_PATH" ] || [ ! -f "$KEY_PATH" ]; then
