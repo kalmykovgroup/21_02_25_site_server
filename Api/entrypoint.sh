@@ -31,5 +31,5 @@ fi
 chown $APP_UID:$APP_UID "$CERTS_DIR"/*.pem
 chown -R $APP_UID:$APP_UID /keys
 
-# Запуск dotnet
-exec "$@"
+# Меняем пользователя и запускаем dotnet
+exec su-exec $APP_UID "$@"   

@@ -30,8 +30,7 @@ WORKDIR /app
 COPY --from=publish /app/publish .
  
 RUN chown -R $APP_UID:$APP_UID /app
-
-USER $APP_UID
+ 
 
 # Укажи новый entrypoint
 ENTRYPOINT ["/entrypoint.sh"]
