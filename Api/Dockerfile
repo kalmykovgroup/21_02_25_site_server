@@ -1,4 +1,9 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+
+# Copy entrypoint
+COPY ./Api/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 USER $APP_UID
 WORKDIR /app 
 
@@ -22,9 +27,6 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-# Copy entrypoint
-COPY ./Api/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
 
 # Укажи новый entrypoint
 ENTRYPOINT ["/entrypoint.sh"]
