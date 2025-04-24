@@ -2,7 +2,8 @@
 using Infrastructure.Data; 
 using Api.Extensions; 
 using Serilog;
-using Serilog.Sinks.SystemConsole.Themes; 
+using Serilog.Sinks.SystemConsole.Themes;
+using Microsoft.AspNetCore.HttpOverrides;
 namespace Api
 {
     public class Program
@@ -66,6 +67,11 @@ namespace Api
             
             
             var app = builder.Build();
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
             app.UseCors("AllowAll");
 
