@@ -7,7 +7,6 @@ RUN chmod +x /entrypoint.sh
 # Удаляем BOM из entrypoint.sh
 RUN sed -i '1s/^\xEF\xBB\xBF//' /entrypoint.sh
 
-USER $APP_UID
 WORKDIR /app 
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
@@ -29,7 +28,10 @@ RUN dotnet publish "Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAp
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+ 
+RUN chown -R $APP_UID:$APP_UID /app
 
+USER $APP_UID
 
 # Укажи новый entrypoint
 ENTRYPOINT ["/entrypoint.sh"]

@@ -3,13 +3,14 @@
 
 : "${CERTS_DIR:?❌ CERTS_DIR не задан! Проверь переменные окружения.}" 
 : "${CERT_PASSWORD_FILE:?❌ CERT_PASSWORD_FILE не задан!}"
+: "${APP_UID:?❌ APP_UID не задан!}"
 
 if [ ! -f "$CERT_PASSWORD_FILE" ]; then
   echo "❌ Файл с паролем для сертификата не найден: $CERT_PASSWORD_FILE"
   exit 1
 fi
  
-CERT_PASSWORD=$(cat ${CERT_PASSWORD_FILE})
+CERT_PASSWORD=$(cat "$CERT_PASSWORD_FILE")
 
 CERT_PATH=$CERTS_DIR/cert.pem
 KEY_PATH=$CERTS_DIR/key.pem
@@ -25,6 +26,10 @@ if [ ! -f "$CERT_PATH" ] || [ ! -f "$KEY_PATH" ]; then
   openssl req -new -x509 -key $KEY_PATH -passin pass:$CERT_PASSWORD \
     -out $CERT_PATH -days 365 -subj "/CN=dataprotection"
 fi
+
+# После генерации сертификатов — даём права пользователю
+chown $APP_UID:$APP_UID "$CERTS_DIR"/*.pem
+chown -R $APP_UID:$APP_UID /keys
 
 # Запуск dotnet
 exec "$@"

@@ -18,6 +18,7 @@
       CERTS_DIR: /certs 
       APPLICATION_NAME: KalmykovGroup
       CERT_PASSWORD_FILE: /run/secrets/cert_password
+      APP_UID: 1000
     volumes:
         - ./Secrets/postgres_password.txt:/run/secrets/postgres_password:ro
         - ./Secrets/cert_password.txt:/run/secrets/cert_password:ro
