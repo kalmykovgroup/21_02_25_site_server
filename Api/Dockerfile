@@ -23,7 +23,7 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 
 # Copy entrypoint
-COPY entrypoint.sh /entrypoint.sh
+COPY ./entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # Укажи новый entrypoint

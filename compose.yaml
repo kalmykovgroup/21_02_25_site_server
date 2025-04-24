@@ -49,6 +49,7 @@
 volumes:
   pgdata:
     driver: local
+  dataprotection:
 
 networks:
   internal:
