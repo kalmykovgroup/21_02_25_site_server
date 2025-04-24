@@ -110,7 +110,7 @@ namespace Api
                 var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
                 // Удаляем базу данных, если она существует
-                context.Database.EnsureDeleted();
+                //  context.Database.EnsureDeleted();
 
                 // Создаём базу данных заново
                 context.Database.EnsureCreated();

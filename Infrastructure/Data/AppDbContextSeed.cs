@@ -24,10 +24,10 @@ public static class AppDbContextSeed
     
     private static Category SeedCategoriesAsync(string fileName)
     {
-      
-      
-        var filePath = Path.Combine(Directory.GetParent(AppContext.BaseDirectory)!.Parent!.Parent!.Parent!.Parent!.FullName, "Infrastructure", "Data", "Default", fileName);
-            //C:\Users\vanya\source\repos\Site\Infrastructure\Data\Default
+        // Определяем путь к файлу относительно исполняемого каталога
+        var filePath = Path.Combine(AppContext.BaseDirectory, fileName);
+
+        //C:\Users\vanya\source\repos\Site\Infrastructure\Data\Default
         if (!File.Exists(filePath))
         { 
              throw new FileNotFoundException($"JSON файл {filePath} не найден.");
