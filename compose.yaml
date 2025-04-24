@@ -16,7 +16,7 @@
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
     volumes:
-        - ./secrets/postgres_password.txt:/run/secrets/postgres_password:ro
+        - ./Secrets/postgres_password.txt:/run/secrets/postgres_password:ro
   db:
     image: postgres:17
     restart: always
@@ -29,7 +29,7 @@
       POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./secrets/postgres_password.txt:/run/secrets/postgres_password:ro
+      - ./Secrets/postgres_password.txt:/run/secrets/postgres_password:ro
     ports:
       - "5432"
     networks:
