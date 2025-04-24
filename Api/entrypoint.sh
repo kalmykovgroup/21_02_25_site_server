@@ -1,7 +1,14 @@
 ﻿#!/bin/bash
 
-: "${$CERT_DIR:?❌ $CERT_DIR не задан! Проверь переменные окружения.}" 
-: "${SECRETS_DIR:?❌ SECRETS_DIR не задан! Проверь переменные окружения.}" 
+
+: "${CERTS_DIR:?❌ CERTS_DIR не задан! Проверь переменные окружения.}"
+: "${SECRETS_DIR:?❌ SECRETS_DIR не задан! Проверь переменные окружения.}"
+: "${CERT_PASSWORD_FILE:?❌ CERT_PASSWORD_FILE не задан!}"
+
+if [ ! -f "$CERT_PASSWORD_FILE" ]; then
+  echo "❌ Файл с паролем для сертификата не найден: $CERT_PASSWORD_FILE"
+  exit 1
+fi
  
 CERT_PASSWORD=$(cat ${CERT_PASSWORD_FILE})
 
