@@ -1,5 +1,10 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 
+# Установим gosu
+RUN apt-get update && \
+    apt-get install -y gosu && \
+    rm -rf /var/lib/apt/lists/*
+
 # Copy entrypoint
 COPY ./Api/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
