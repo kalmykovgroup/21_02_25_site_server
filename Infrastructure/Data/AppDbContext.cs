@@ -26,8 +26,8 @@ namespace Infrastructure.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.AddInterceptors(_changeLogInterceptor)
-                .EnableSensitiveDataLogging(); // Включает логирование чувствительных данных;
+            optionsBuilder.AddInterceptors(_changeLogInterceptor);
+              //  .EnableSensitiveDataLogging(); // Включает логирование чувствительных данных;
             base.OnConfiguring(optionsBuilder);
         }
          

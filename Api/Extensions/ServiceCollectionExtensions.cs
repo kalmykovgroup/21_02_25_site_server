@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
 using Application.Common.Interfaces;
@@ -21,6 +22,7 @@ using Infrastructure.Repositories.UserSpace;
 using Infrastructure.Services;
 using Infrastructure.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens; 
@@ -68,6 +70,7 @@ public static class ServiceCollectionExtensions
   
         return services;
     }
+
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
         
@@ -182,14 +185,10 @@ public static class ServiceCollectionExtensions
             Console.WriteLine("🧪 Using development config file for DB connection.");
         }
 
-        services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(connectionString));
+        services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
-        /* services.AddDbContext<AppDbContext>(options =>
-             options.UseLazyLoadingProxies().UseNpgsql(
-                 configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("DefaultConnection не настроен в appsettings.json.")
-             )
-         );*/
+
+     
 
         services.AddScoped<IUnitOfWork, AppDbContext>();
         
@@ -208,8 +207,28 @@ public static class ServiceCollectionExtensions
                 options.Configuration = redisConnection;
             });
         }
-         
-        
+
+        if (isProduction)
+        {
+            var certs_dir = GetRequiredEnv("CERTS_DIR");
+            var secrets_dir = GetRequiredEnv("SECRETS_DIR");
+            var app_name = GetRequiredEnv("APPLICATION_NAME");
+
+            var certPath = $"{certs_dir}/cert.pfx";
+            var certPassword = File.ReadAllText($"{secrets_dir}/cert_password").Trim();
+
+            if (!File.Exists(certPath))
+                throw new FileNotFoundException("Сертификат не найден", certPath);
+
+            var cert = new X509Certificate2(certPath, certPassword);
+
+            services.AddDataProtection()
+                .PersistKeysToFileSystem(new DirectoryInfo("/keys"))
+                .ProtectKeysWithCertificate(cert)
+                .SetApplicationName(app_name);
+        }
+
+
         return services;
     }
 }

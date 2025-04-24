@@ -1,36 +1,8 @@
-﻿using Api.Middleware;
-using Application.Common.Interfaces;
-using Application.Handlers.CategorySpace.CategoryEntity.Mapping; 
-using Application.Handlers.ProductSpace.ProductEntity.Mapping;
-using Domain.Interfaces.Repositories.CategorySpace;
-using Domain.Interfaces.Repositories.IntermediateSpace;
-using Domain.Interfaces.Repositories.ProductSpace;
-using Domain.Interfaces.Repositories.UserSpace;
-using FluentValidation.AspNetCore;
-using FluentValidation;
-using Infrastructure.Data;
-using Infrastructure.Repositories.CategorySpace;
-using Infrastructure.Repositories.IntermediateSpace;
-using Infrastructure.Repositories.ProductSpace;
-using Infrastructure.Repositories.UserSpace;
-using Infrastructure.Services;
-using Infrastructure.Settings;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using System.Reflection;
-using System.Text.Json;
-using System.Text;
-using Api.Extensions;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using Application.Handlers.ProductSpace.WishListEntity.Commands;
-using Application.Handlers.ProductSpace.ProductEntity.Handlers;
+﻿using Api.Middleware; 
+using Infrastructure.Data; 
+using Api.Extensions; 
 using Serilog;
-using Serilog.Sinks.SystemConsole.Themes;
-using Serilog;
-using Serilog.Sinks.SystemConsole.Themes;
-using System.Collections.Generic;
-
+using Serilog.Sinks.SystemConsole.Themes; 
 namespace Api
 {
     public class Program
@@ -44,8 +16,7 @@ namespace Api
             
             //Application
             builder.Services.AddApplicationServices(builder.Configuration);
-
-            IWebHostEnvironment env = builder.Environment;
+             
 
             //Infrastructure
             builder.Services.AddInfrastructureServices(builder.Configuration, !builder.Environment.IsDevelopment());
