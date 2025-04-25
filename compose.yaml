@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Api/Dockerfile
     ports:
-      - 8080  
+      - 8080
     networks:
       - internal
     environment:
@@ -15,7 +15,7 @@ services:
       POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
-      CERTS_DIR: /certs 
+      CERTS_DIR: /certs
       APPLICATION_NAME: KalmykovGroup
       CERT_PASSWORD_FILE: /run/secrets/cert_password
       APP_UID: 1000
@@ -25,12 +25,9 @@ services:
         - ./dataprotection:/keys
         - ./certs:/certs
     restart: unless-stopped
-
   db:
     image: postgres:17
     container_name: pgsql
-    env_file:
-      - .env  
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -48,14 +45,13 @@ services:
       timeout: 5s
       retries: 5
     restart: always
-
   nginx:
     build:
       context: ./nginx
       dockerfile: ./Dockerfile
     container_name: nginx
     restart: unless-stopped
-    ports: 
+    ports:
       - "80:80" # Apache внутри server теперь отдаёт Web-клиент
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # основной конфиг 
@@ -63,17 +59,15 @@ services:
       - ./nginx/stream.d/:/etc/nginx/stream.d/    # конфиги для stream 
       - ./nginx/templates/:/etc/nginx/templates    # конфиги для stream  
     environment:
-      - API_PORT=${API_PORT} 
+      - API_PORT=${API_PORT}
     networks:
-      - public # Для связи с server 
+      - public # Для связи с server
     depends_on:
-      - api 
- 
+      - api
 volumes:
   pgdata:
     driver: local
   dataprotection:
-
 networks:
   internal:
     driver: bridge  
