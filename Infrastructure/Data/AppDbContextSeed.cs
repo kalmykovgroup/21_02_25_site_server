@@ -24,15 +24,16 @@ public static class AppDbContextSeed
     
     private static Category SeedCategoriesAsync(string fileName)
     {
-        // Определяем путь к файлу относительно исполняемого каталога
-        var filePath = Path.Combine(AppContext.BaseDirectory, fileName);
+        
+        // Рекурсивно ищем файл в каталоге публикации
+        var baseDirectory = AppContext.BaseDirectory;
+        var filePath = Directory.GetFiles(baseDirectory, fileName, SearchOption.AllDirectories).FirstOrDefault();
 
-        //C:\Users\vanya\source\repos\Site\Infrastructure\Data\Default
-        if (!File.Exists(filePath))
-        { 
-             throw new FileNotFoundException($"JSON файл {filePath} не найден.");
-        }
+        if (filePath == null)
+            throw new FileNotFoundException($"❌ JSON-файл '{fileName}' не найден в каталоге {baseDirectory} и его подпапках.");
 
+        Console.WriteLine($"✅ Найден файл: {filePath}");
+        
         var jsonData = File.ReadAllText(filePath); 
 
         var options = new JsonSerializerOptions
@@ -59,7 +60,6 @@ public static class AppDbContextSeed
 
         void Flatten(Category category)
         {
-            
             // Клонируем категорию без навигационных свойств
             var flatCategory = mapper.Map<Category>(category);
             flatCategory.SubCategories = null!; // Убираем вложенные категории

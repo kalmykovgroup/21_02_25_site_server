@@ -1,4 +1,5 @@
-﻿using Api.Middleware; 
+﻿using Api.Conventions;
+using Api.Middleware; 
 using Infrastructure.Data; 
 using Api.Extensions; 
 using Serilog;
@@ -6,19 +7,21 @@ using Serilog.Sinks.SystemConsole.Themes;
 using Microsoft.AspNetCore.HttpOverrides;
 namespace Api
 {
+    
     public class Program
     {
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
             
+            builder.Environment.WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            
             //Api
             builder.Services.AddApiServices(builder.Configuration);
             
             //Application
             builder.Services.AddApplicationServices(builder.Configuration);
-             
-
+    
             //Infrastructure
             builder.Services.AddInfrastructureServices(builder.Configuration, !builder.Environment.IsDevelopment());
    
@@ -61,13 +64,21 @@ namespace Api
                     outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}"
                 )
                 .CreateLogger();
- 
+            
+            builder.Logging.ClearProviders();
+            builder.Logging.AddConsole(); // 👈 обязательно
+            builder.Logging.SetMinimumLevel(LogLevel.Information);
+             
+       
             // Добавление Serilog в качестве провайдера логирования
             builder.Host.UseSerilog();
             
             
             var app = builder.Build();
 
+            var logger = app.Services.GetRequiredService<ILogger<Program>>();
+            logger.LogInformation("Приложение стартовало");
+            
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
@@ -81,8 +92,7 @@ namespace Api
              }*/
 
             app.UseMiddleware<ExceptionMiddleware>();
-
-
+            
 
             using (var scope = builder.Services.BuildServiceProvider().CreateScope())
             {
@@ -95,15 +105,24 @@ namespace Api
                 context.Database.EnsureCreated();
             }
              
-
-            app.UseRouting();
+ 
 
             app.UseMiddleware<JwtMiddleware>(); // ✅ JWT аутентификация. Защита от CSRF уже включена 
+            
+            // === 1. Отдача статики ===
+            app.UseStaticFiles();
 
+            // === 2. SPA fallback — ДО Routing ===
+       
+            // === 3. Routing и авторизация ===
+            app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.MapControllers();
 
+             // === 4. Контроллеры ===
+            app.MapControllers();
+            app.MapFallbackToFile("index.html");
+            
             app.Run();
         }
     }

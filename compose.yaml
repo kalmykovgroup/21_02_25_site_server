@@ -24,9 +24,10 @@
         - ./Secrets/cert_password.txt:/run/secrets/cert_password:ro
         - ./dataprotection:/keys
         - ./certs:/certs
+    restart: unless-stopped
+
   db:
     image: postgres:17
-    restart: always
     container_name: pgsql
     env_file:
       - .env  
@@ -46,7 +47,28 @@
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: always
 
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: ./Dockerfile
+    container_name: nginx
+    restart: unless-stopped
+    ports: 
+      - "80:80" # Apache внутри server теперь отдаёт Web-клиент
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # основной конфиг 
+      - ./nginx/conf.d/:/etc/nginx/conf.d/        # конфиги для виртуальных хостов
+      - ./nginx/stream.d/:/etc/nginx/stream.d/    # конфиги для stream 
+      - ./nginx/templates/:/etc/nginx/templates    # конфиги для stream  
+    environment:
+      - API_PORT=${API_PORT} 
+    networks:
+      - public # Для связи с server 
+    depends_on:
+      - api 
+ 
 volumes:
   pgdata:
     driver: local
